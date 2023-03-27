@@ -1,9 +1,14 @@
 import { Context } from "telegraf";
 
-interface SessionData {
-	messageCount: number;
-    maxMessage: number;
-    currentTopic?: string;
+export interface SessionData {
+	messagesCount: number;
+    maxDailyMessages: number;
+    currentTopic: string;
+    topics: Array<string>;
+    maxMonthlyImages: number;
+    imagesResetDate: Date;
+    imagesCount: number;
+    subscription: string;
 }
 
 // Define your own context type

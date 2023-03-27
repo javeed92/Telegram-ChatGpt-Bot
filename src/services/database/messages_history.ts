@@ -1,3 +1,4 @@
+import { ICreateMessagesHistory } from "@/types/models";
 import MessagesHistory from "../../models/messages_history";
 
 export const getMessagesHistoryByChatId = async (
@@ -14,18 +15,19 @@ export const getMessagesHistoryByChatId = async (
 
 export const addMessageToHistoryByChatId = async (
   chat_id: string | undefined,
-  payload: {
-    text: string | undefined;
-    date: Date | string | undefined;
-    role?: string | undefined;
-  } = {
-    role: 'user',
+  chat_topic: string | undefined,
+  payload: Partial<ICreateMessagesHistory> = {
+    role: "user",
     date: undefined,
-    text: undefined
+    text: undefined,
   }
 ) => {
   try {
-    const message = await MessagesHistory.create({ chat_id, ...payload });
+    const message = await MessagesHistory.create({
+      chat_id,
+      chat_topic,
+      ...payload,
+    });
 
     return message;
   } catch (error) {

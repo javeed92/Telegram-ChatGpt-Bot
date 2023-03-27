@@ -2,12 +2,18 @@ import ChatModel from "@/models/chat";
 
 export const getChatByTelegramChatId = async (
   id: number | undefined,
+  chat_topic: string | undefined,
   populate: boolean = false
 ) => {
   try {
     const chat = populate
-      ? await ChatModel.findOne({ id }).populate("messages").lean()
-      : await ChatModel.findOne({ id });
+      ? await ChatModel.findOne({ id })
+          .populate({
+            path: "messages",
+            match: { chat_topic },
+          })
+          .lean()
+      : await ChatModel.findOne({ id }).lean();
 
     return chat;
   } catch (error) {

@@ -1,5 +1,5 @@
 import { ChatCompletionRequestMessage } from "openai";
-import openaiAPI from "./config";
+import openaiAPI from "../config";
 import logger from "@/config/logger";
 
 export const createCompletion = async (
@@ -37,7 +37,6 @@ export const createChatCompletion = async (
       messages,
       model: "gpt-3.5-turbo",
       n: 1,
-      stop: "\n",
     });
     logger.debug("createChatCompletion --- Completed...");
     console.dir(response.data, {depth: Infinity});

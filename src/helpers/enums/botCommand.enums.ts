@@ -1,7 +1,7 @@
 export enum BotCommandList {
     START = 'start',
     SET_TOPIC = 'set_topic',
-    INSTRUCT = 'instruct',
+    CHECKOUT_TOPIC = 'checkout_topic',
     ACCOUNT = 'account',
     PREMIUM = 'premium',
     IMAGE = 'image',
@@ -11,8 +11,8 @@ export enum BotCommandList {
 }
 export enum BotCommandDescriptionList {
     START = 'About this bot',
-    SET_TOPIC = 'About this bot',
-    INSTRUCT = 'Instruct bot to act in desired way',
+    SET_TOPIC = 'Add new context or sub chat',
+    CHECKOUT_TOPIC = 'Switch to topic like to chat window',
     ACCOUNT = 'My account',
     PREMIUM = 'Premium subscription',
     IMAGE = 'Generate an image',
