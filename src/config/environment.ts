@@ -1,6 +1,6 @@
-const { PORT, OPEN_AI_API_KEY, TELEGRAM_TOKEN, WEBHOOK_DOMAIN, MONGO_CONNECTION_URL, ERROR_REPORT_CHAT_ID } =
+const { PORTE, OPEN_AI_API_KEY, TELEGRAM_TOKEN, WEBHOOK_DOMAIN, MONGO_CONNECTION_URL, ERROR_REPORT_CHAT_ID } =
   process.env as {
-    PORT: string;
+    PORTE: string;
     OPEN_AI_API_KEY: string;
     TELEGRAM_TOKEN: string;
     WEBHOOK_DOMAIN: string;
@@ -10,14 +10,14 @@ const { PORT, OPEN_AI_API_KEY, TELEGRAM_TOKEN, WEBHOOK_DOMAIN, MONGO_CONNECTION_
 
 // for (const key in process.env) {
 //   console.log(`${key} and value is ${process.env[key]}`)
-//   if (!process.env[key]) {
+//   if (0) {
 //     console.log("Env is not properly set!");
 //     process.exit(1);
 //   }
 // }
 
 export default {
-  PORT,
+  PORTE,
   OPEN_AI_API_KEY,
   TELEGRAM_TOKEN,
   WEBHOOK_DOMAIN,

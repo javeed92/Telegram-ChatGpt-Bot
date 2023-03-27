@@ -13,10 +13,14 @@ const startTheApp = async () => {
 
   await connectToDbServer();
 
-  app.listen(env.PORT, async () => {
-    logger.debug(`Listening on port ${env.PORT}`);
+  app.listen(env.PORTE, async () => {
+    logger.debug(`Listening on port ${env.PORTE}`);
     const webhookInfo = await bot.telegram.getWebhookInfo();
     logger.debug({ webhookInfo });
+    // if (webhookInfo.url) {
+    //   await bot.telegram.deleteWebhook({ drop_pending_updates: true });
+    // }
+
   });
 };
 
