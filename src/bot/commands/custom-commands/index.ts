@@ -11,7 +11,8 @@ import {
   successTopicsSetText,
   tooManyTopicArgsText,
 } from "@/helpers/texts/commandResponse.texts";
-import { createImage } from "@/openai_api/images";
+import { createImage } from "@/openai-api/images";
+import { generateImage } from "@/replicate-api/openjourney-model";
 import { MyContext } from "@/types/bot/customContext";
 import { Composer } from "telegraf";
 
@@ -56,7 +57,7 @@ composer.command(BotCommandList.DONATIONS, async (ctx) => {
   }
 });
 
-composer.command(BotCommandList.IMAGE, async (ctx) => {
+composer.command(BotCommandList.IMAGE_DALLE, async (ctx) => {
   console.dir(ctx.update, {depth: Infinity})
   try {
     const prompt = ctx.message.text.split(" ").slice(1).join(" ");
@@ -84,9 +85,37 @@ composer.command(BotCommandList.IMAGE, async (ctx) => {
   }
 });
 
+composer.command(BotCommandList.IMAGE_MIDJ, async (ctx) => {
+  console.dir(ctx.update, {depth: Infinity})
+  try {
+    const prompt = ctx.message.text.split(" ").slice(1).join(" ");
+
+    if (!prompt)
+      return await ctx.sendMessage(
+        "Please enter a descriptive prompt to generate image."
+      );
+    const msg = await ctx.sendMessage("Processing");
+      
+    // Send request to Replicate to generate image
+    const url =  await generateImage(prompt);
+
+    if(url){
+      ctx.session!.imagesCount ++
+      logger.debug(url)
+      await ctx.deleteMessage(msg.message_id);
+      return await ctx.sendPhoto({ url });
+    }
+
+    await ctx.deleteMessage(msg.message_id);
+    return ctx.sendMessage('Something went wrong, please try again later')
+  } catch (error) {
+    throw error;
+  }
+});
+
 composer.command(BotCommandList.PREMIUM, async (ctx) => {
   try {
-    await ctx.reply(BotCommandList.IMAGE);
+    await ctx.reply(BotCommandList.IMAGE_DALLE);
   } catch (error) {
     throw error;
   }
@@ -114,7 +143,7 @@ composer.command(BotCommandList.SET_TOPIC, async (ctx) => {
 
 composer.command(BotCommandList.TERMS, async (ctx) => {
   try {
-    await ctx.reply(BotCommandList.IMAGE);
+    await ctx.reply(BotCommandList.IMAGE_DALLE);
   } catch (error) {
     throw error;
   }

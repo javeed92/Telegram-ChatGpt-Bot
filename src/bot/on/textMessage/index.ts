@@ -2,7 +2,7 @@ import { Composer } from "telegraf";
 import { message } from "telegraf/filters";
 import { getChatByTelegramChatId } from "@/services/database/chat";
 import { addMessageToHistoryByChatId } from "@/services/database/messages_history";
-import { createChatCompletion } from "@/openai_api/chat-complation";
+import { createChatCompletion } from "@/openai-api/chat-complation";
 import { prepareChatComplationMessages } from "@/utils/formatMessages";
 import { MyContext } from "@/types/bot/customContext";
 import logger from "@/config/logger";
