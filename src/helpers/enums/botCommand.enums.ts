@@ -1,5 +1,6 @@
 export enum BotCommandList {
     START = 'start',
+    HELP = 'help',
     ACCOUNT = 'account',
     SET_TOPIC = 'set_topic',
     CHECKOUT_TOPIC = 'checkout_topic',
@@ -12,6 +13,7 @@ export enum BotCommandList {
 }
 export enum BotCommandDescriptionList {
     START = 'About this bot',
+    HELP = 'Get help',
     ACCOUNT = 'My account',
     SET_TOPIC = 'Add new context or sub chat',
     CHECKOUT_TOPIC = 'Switch to topic like to chat window',

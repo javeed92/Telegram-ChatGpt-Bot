@@ -77,16 +77,25 @@ export const getTopics = (session: any) => {
 };
 
 
-export const helpCommandResponse = fmt`
+export const helpCommandResponse = fmt`Hi again👋
 
+🐃 In order track the usage and 
+account state tap /account
 
-✉️ To get a text response, write your question into the chat.
+🦖 You can /set_topic, /delete_topic, 
+/checkout_topic 
+For example (/set_topic Ocean) and 
+start conversation about Ocean
 
-🌅 To generate an image, start your request with '/image' and then your text. Example: /image sunset over the sea.
+To switch between contexts 
+tap /checkout_topic and 
+select one of your topic
 
-🔄 To delete your context, send a command '/deletecontext'.
+🐡 Using /image_dall or /image_mj you can 
+create whatever image that you can imagine
 
-💬 If you want to add a bot to your group/channel, please contact @i_abramov_gpt.
+Example 
+/image_mj 3 monkeys playing on the moon... ( same with /image_dall)
 
-🛡 To quickly restore access and connect a backup bot in case of issues with the main account, subscribe to the @GPT4Telegram channel: no spam or advertising.
+🦑 To get a text response, you can also send voice messages🐝
 `

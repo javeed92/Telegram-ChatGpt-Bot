@@ -9,7 +9,7 @@ import logger from "@/config/logger";
 const app = express();
 
 const startTheApp = async () => {
-  app.use(await bot.createWebhook({ domain: env.WEBHOOK_DOMAIN, drop_pending_updates: true }));
+  app.use(await bot.createWebhook({ domain: env.WEBHOOK_DOMAIN }));
 
   await connectToDbServer();
 
@@ -17,10 +17,6 @@ const startTheApp = async () => {
     logger.debug(`Listening on port ${env.PORTE}`);
     const webhookInfo = await bot.telegram.getWebhookInfo();
     logger.debug({ webhookInfo });
-    // if (webhookInfo.url) {
-    //   await bot.telegram.deleteWebhook({ drop_pending_updates: true });
-    // }
-
   });
 };
 
