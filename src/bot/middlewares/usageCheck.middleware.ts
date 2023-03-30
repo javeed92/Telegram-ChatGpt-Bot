@@ -11,12 +11,18 @@ import {
   premiumMonthlyImagesLimitResponse,
   premiumDailyMessageLimitResponse,
 } from "../helpers/texts/limitReachedResponses.texts";
+import environment from "@/config/environment";
 
 export async function usageCheckForImage(
   ctx: MyContext,
   next: () => Promise<void>
 ) {
   logger.debug("Usage Check Middleware");
+  const chat_ids = environment.WHITE_LIST_CHAT_ID.split(",");
+  for (const chat_id of chat_ids) {
+    if (parseInt(chat_id) == ctx.message?.chat.id) 
+    return await next()
+  }
   try {
     console.dir(ctx.update, { depth: 3 });
     console.dir(ctx.session, { depth: 3 });
@@ -36,7 +42,7 @@ export async function usageCheckForImage(
       }
     }
 
-    await next();
+    return await next();
   } catch (error) {
     throw error;
   }
