@@ -7,14 +7,13 @@ import {
   convertAudioFileWithStream,
 } from "@/utils/convetAudioFile";
 import { createTranscription } from "@/openai-api/whisper";
-import {
-  createChatCompletion,
-} from "@/openai-api/chat-complation";
+import { createChatCompletion } from "@/openai-api/chat-complation";
 import { escapeCodeBlock, splitCodeBlock } from "@/utils/escapeMarkdown2";
+import { usageCheckForVoice } from "@/bot/middlewares/usageCheck.middleware";
 
 const composer = new Composer<MyContext>();
 
-composer.on(message("voice"), async (ctx) => {
+composer.on(message("voice"), usageCheckForVoice, async (ctx) => {
   try {
     const fileUrl = await ctx.telegram.getFileLink(ctx.message.voice.file_id);
 

@@ -1,3 +1,5 @@
+import { BotSubscription } from "@/helpers/enums/botSubscription.enums";
+
 const { PORTE, OPEN_AI_API_KEY, TELEGRAM_TOKEN, WEBHOOK_DOMAIN, MONGO_CONNECTION_URL, ERROR_REPORT_CHAT_ID, REPLICATE_API_TOKEN } =
   process.env as {
     PORTE: string;
@@ -9,13 +11,18 @@ const { PORTE, OPEN_AI_API_KEY, TELEGRAM_TOKEN, WEBHOOK_DOMAIN, MONGO_CONNECTION
     REPLICATE_API_TOKEN: string;
   };
 
-// for (const key in process.env) {
-//   console.log(`${key} and value is ${process.env[key]}`)
-//   if (0) {
-//     console.log("Env is not properly set!");
-//     process.exit(1);
-//   }
-// }
+export const botConfig = {
+  [BotSubscription.FREE]: {
+    DAILY_MESSAGES_LIMIT: 35,
+    DAILY_VOICES_LIMIT: 3,
+    MONTHLY_IMAGES_LIMIT: 12
+  },
+  [BotSubscription.PREMIUM]: {
+    DAILY_MESSAGES_LIMIT: 100,
+    DAILY_VOICES_LIMIT: 100,
+    MONTHLY_IMAGES_LIMIT: 100
+  }
+}
 
 export default {
   PORTE,

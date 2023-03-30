@@ -1,4 +1,4 @@
-import { IChat, IMessagesHistory } from "@/types/models";
+import { IMessagesHistory } from "@/types/models";
 
 export const prepareChatComplationMessages = (messages: IMessagesHistory[]) => {
   const formattedMessages = messages.map((mes) => {
