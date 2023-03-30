@@ -3,13 +3,13 @@ import {
   topicToDelete,
 } from "@/bot/helpers/markups/topic.markup";
 import logger from "@/config/logger";
-import createAccountResponseHelper from "@/bot/helpers/texts/createAccountResponse.helper";
 import { BotCommandList } from "@/helpers/enums/botCommand.enums";
 import {
   emptyArgumentTopicText,
   successTopicSetText,
   successTopicsSetText,
   tooManyTopicArgsText,
+  accountResponseText,
 } from "@/bot/helpers/texts/commandResponse.texts";
 import { createImage } from "@/openai-api/images";
 import { generateImage } from "@/replicate-api/openjourney-model";
@@ -21,7 +21,7 @@ const composer = new Composer<MyContext>();
 
 composer.command(BotCommandList.ACCOUNT, async (ctx) => {
   try {
-    const accountReply = createAccountResponseHelper(ctx.session!);
+    const accountReply = accountResponseText(ctx.session!);
     return await ctx.reply(accountReply);
   } catch (error) {
     throw error;

@@ -1,6 +1,7 @@
 import { createTelegramChat } from "@/services/database/chat";
 import { MyContext } from "@/types/bot/customContext";
 import logger from "@/config/logger";
+import { startResponse } from "@/bot/helpers/texts/commandResponse.texts";
 
 export const startHandler = async (ctx: MyContext) => {
   try {
@@ -8,7 +9,7 @@ export const startHandler = async (ctx: MyContext) => {
 
     logger.info({ chat });
 
-    await ctx.reply("Welcome to our AI bot!");
+    await ctx.reply(startResponse(ctx.message?.from.username || ctx.message?.from.first_name || ctx.message?.from.last_name || 'friend'));
   } catch (error) {
     throw error;
   }

@@ -2,8 +2,8 @@ import { Composer } from "telegraf";
 import { message } from "telegraf/filters";
 import { getChatByTelegramChatId } from "@/services/database/chat";
 import { addMessageToHistoryByChatId } from "@/services/database/messages_history";
-import { createChatCompletion } from "@/openai-api/chat-complation";
-import { prepareChatComplationMessages } from "@/utils/formatMessages";
+import { createChatCompletion } from "@/openai-api/chat-completion";
+import { prepareChatcompletionMessages } from "@/utils/formatMessages";
 import { MyContext } from "@/types/bot/customContext";
 import logger from "@/config/logger";
 import { ChatCompletionRequestMessageRoleEnum } from "openai";
@@ -24,7 +24,7 @@ composer.on(message("text"), usageCheckForText, async (ctx) => {
         date: new Date(ctx.message?.date * 1000),
       }
     );
-    // get messages for creating chatComplation
+    // get messages for creating chatcompletion
     const currentChat = await getChatByTelegramChatId(
       ctx.message.chat.id,
       ctx.session?.currentTopic,
@@ -34,8 +34,8 @@ composer.on(message("text"), usageCheckForText, async (ctx) => {
     if (currentChat?.messages?.length) {
       const reply = await ctx.reply("Please wait..");
 
-      const messages = prepareChatComplationMessages(currentChat.messages);
-      // generate response based on input messages using openai api chatComplation endpoint
+      const messages = prepareChatcompletionMessages(currentChat.messages);
+      // generate response based on input messages using openai api chatcompletion endpoint
       const response = await createChatCompletion(
         messages,
         String(currentChat?._id)

@@ -7,7 +7,7 @@ import {
   convertAudioFileWithStream,
 } from "@/utils/convetAudioFile";
 import { createTranscription } from "@/openai-api/whisper";
-import { createChatCompletion } from "@/openai-api/chat-complation";
+import { createChatCompletion } from "@/openai-api/chat-completion";
 import { escapeCodeBlock, splitCodeBlock } from "@/utils/escapeMarkdown2";
 import { usageCheckForVoice } from "@/bot/middlewares/usageCheck.middleware";
 
@@ -29,12 +29,12 @@ composer.on(message("voice"), usageCheckForVoice, async (ctx) => {
       throw new Error("Something went wrong");
     }
 
-    const complationText = await createChatCompletion(
+    const completionText = await createChatCompletion(
       [{ role: "user", content: voiceText }],
       ctx.message.from.username
     );
 
-    const textArray = splitCodeBlock(complationText || "");
+    const textArray = splitCodeBlock(completionText || "");
     console.log(textArray);
 
     for (let txt of textArray) {
