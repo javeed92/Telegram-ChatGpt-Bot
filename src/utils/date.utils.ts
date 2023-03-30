@@ -1,13 +1,11 @@
 export const getOneMonthLaterDate = () => {
   // Get the current date
-  const currentDate = new Date();
-
-  // Get the month and year of the current date
-  const currentMonth = currentDate.getMonth();
-  const currentYear = currentDate.getFullYear();
-
-  // Add one month to the current date
-  const oneMonthLater = new Date(currentYear, currentMonth + 1);
-
-  return oneMonthLater
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const nextMonth = (month + 1) % 12;
+  const yearOfNextMonth = year + Math.floor((month + 1) / 12);
+  const lastDayOfMonth = new Date(yearOfNextMonth, nextMonth, 0).getDate();
+  const day = Math.min(date.getDate(), lastDayOfMonth);
+  return new Date(yearOfNextMonth, nextMonth, day);
 };

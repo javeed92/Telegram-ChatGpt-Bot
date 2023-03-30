@@ -4,16 +4,18 @@ import logger from "@/config/logger";
 import bot from "@/bot";
 import environment from "@/config/environment";
 
+// EVERY DAY
 cron.schedule("0 0 * * *", async () => {
   // Iterate over all the user sessions and reset the daily message counts for each user
   logger.info("**********CRON IS STARTED ( Messages reset )**********");
   await updateSessions(
-    { "session.subscription": "Free" },
+    { },
     { $set: { "session.messagesCount": 0 } }
   );
   logger.info("**********CRON IS FINISHED**********");
 });
 
+// EVERY 6 HOURS
 cron.schedule("0 */6 * * *", async () => {
   // Get the current date
   logger.info("**********CRON IS STARTED ( Images reset )**********");

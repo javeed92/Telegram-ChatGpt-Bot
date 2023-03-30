@@ -7,7 +7,7 @@ export const startHandler = async (ctx: MyContext) => {
   try {
     const chat = await createTelegramChat(ctx.message?.chat);
 
-    logger.info({ chat });
+    logger.info({ chat, ses: ctx.session });
 
     await ctx.reply(startResponse(ctx.message?.from.username || ctx.message?.from.first_name || ctx.message?.from.last_name || 'friend'));
   } catch (error) {
