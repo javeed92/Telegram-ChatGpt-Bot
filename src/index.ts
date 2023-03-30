@@ -17,10 +17,6 @@ const startTheApp = async () => {
     logger.debug(`Listening on port ${env.PORTE}`);
     const webhookInfo = await bot.telegram.getWebhookInfo();
     logger.debug({ webhookInfo });
-    // if (webhookInfo.url) {
-    //   await bot.telegram.deleteWebhook({ drop_pending_updates: true });
-    // }
-
   });
 };
 
