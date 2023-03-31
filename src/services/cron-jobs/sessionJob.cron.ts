@@ -12,6 +12,10 @@ cron.schedule("0 0 * * *", async () => {
     { },
     { $set: { "session.messagesCount": 0 } }
   );
+  bot.telegram.sendMessage(
+    environment.ERROR_REPORT_CHAT_ID,
+    "Cron - updating message limits"
+  );
   logger.info("**********CRON IS FINISHED**********");
 });
 
@@ -31,6 +35,10 @@ cron.schedule("0 */6 * * *", async () => {
       $set: { "sessionData.imagesCount": 0 },
     }
   );
+  bot.telegram.sendMessage(
+    environment.ERROR_REPORT_CHAT_ID,
+    "Cron - updating image limits"
+  );
   logger.info("**********CRON IS STARTED**********");
 });
 
@@ -43,5 +51,4 @@ cron.schedule("*/13 * * * *", async () => {
     environment.ERROR_REPORT_CHAT_ID,
     "cron started to run server"
   );
-  logger.info("**********CRON IS STARTED**********");
 });

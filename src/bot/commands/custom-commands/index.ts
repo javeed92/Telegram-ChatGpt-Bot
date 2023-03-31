@@ -105,7 +105,7 @@ composer.command(BotCommandList.IMAGE_MIDJ, usageCheckForImage, async (ctx) => {
     const url = await generateImage(prompt);
 
     if (url) {
-      ctx.session!.imagesCount++;
+      ctx.session.imagesCount++;
       logger.debug(url);
       await ctx.deleteMessage(msg.message_id);
       return await ctx.sendPhoto({ url });

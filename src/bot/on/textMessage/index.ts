@@ -8,6 +8,7 @@ import { MyContext } from "@/types/bot/customContext";
 import logger from "@/config/logger";
 import { ChatCompletionRequestMessageRoleEnum } from "openai";
 import { usageCheckForText } from "@/bot/middlewares/usageCheck.middleware";
+import { escapeCodeBlock, splitText } from "@/utils/escapeMarkdown2";
 
 const composer = new Composer<MyContext>();
 
@@ -44,11 +45,15 @@ composer.on(message("text"), usageCheckForText, async (ctx) => {
       if (!response)
         return await ctx.reply("Could not answer! Please provide more context");
 
-      // Update limiter of session
+      // Update message counter of session
       ctx.session ? ctx.session.messagesCount++ : "";
+
       // Response to the end user
       await ctx.deleteMessage(reply.message_id);
-      await ctx.reply(response);
+
+      if (response.includes("```")) await sendCodeMessages(ctx, response);
+      else await ctx.sendMessage(response);
+
       // save api response as part of message history
       await addMessageToHistoryByChatId(
         String(ctx.message.chat.id),
@@ -64,5 +69,24 @@ composer.on(message("text"), usageCheckForText, async (ctx) => {
     throw error;
   }
 });
+
+// Util functions
+
+async function sendCodeMessages(ctx: MyContext, text: string) {
+  const { codeBlocks, parts } = splitText(text || "");
+  console.log({ codeBlocks, parts });
+
+  for (let txt of parts) {
+    if (!txt) continue;
+    let cTxt: string | undefined;
+    if ((cTxt = codeBlocks?.find((cb) => cb.includes(txt)))) {
+      logger.debug("MARKDOWN MESSAGE");
+      txt = escapeCodeBlock(cTxt);
+      await ctx.replyWithMarkdownV2(txt);
+    } else {
+      await ctx.sendMessage(txt);
+    }
+  }
+}
 
 export default composer;
