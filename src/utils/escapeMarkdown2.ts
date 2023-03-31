@@ -1,8 +1,8 @@
-export function splitCodeBlock(text: string) {
-  const codeBlockRegex = /([\s\S]*?)(```[\s\S]*?```[\n]?)([\s\S]*)/;
-  const parts = text.split(codeBlockRegex);
-
-  return parts;
+export function splitText(text: string) {
+  const regex = /```([\s\S]*?)```/g;
+  const codeBlocks = text.match(regex);
+  const parts = text.split(regex).filter(Boolean);
+  return { parts, codeBlocks };
 }
 
 export function escapeCodeBlock(text: string) {
