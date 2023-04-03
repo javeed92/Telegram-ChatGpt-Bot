@@ -36,14 +36,15 @@ export const createChatCompletion = async (
       user,
       messages,
       model: "gpt-3.5-turbo",
+      max_tokens: 256,
       n: 1,
     });
     logger.debug("createChatCompletion --- Completed...");
     console.dir(response.data, {depth: Infinity});
 
     return response.data.choices[0].message?.content;
-  } catch (error) {
-    // console.log(error);
+  } catch (error: any) {
+    console.log(error.response.data);
     throw error
   }
 };

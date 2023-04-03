@@ -99,3 +99,5 @@ Example
 
 🦑 To get a text response, you can also send voice messages🐝
 `
+
+export const voiceToImageTextPrompt = 'Please send voice that describes image reply to this message'

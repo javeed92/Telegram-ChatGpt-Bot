@@ -27,11 +27,11 @@ composer.on(callbackQuery("data"), async (ctx, next) => {
   if (isCheckoutCallback) {
     await ctx.answerCbQuery();
     const data = ctx.callbackQuery.data.split(" ")[1];
-    ctx.session!.currentTopic =
-      ctx.session?.currentTopic === data
+    ctx.session.currentTopic =
+      ctx.session.currentTopic === data
         ? "default_topic"
-        : ctx.session!.currentTopic;
-    ctx.session!.topics = ctx.session!.topics.filter((topic) => topic !== data);
+        : ctx.session.currentTopic;
+    ctx.session.topics = ctx.session.topics.filter((topic) => topic !== data);
     return await ctx.sendMessage(`Topic: ${data}, deleted`);
   }
 });

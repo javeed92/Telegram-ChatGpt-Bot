@@ -58,39 +58,39 @@ composer.command(BotCommandList.DONATIONS, async (ctx) => {
   }
 });
 
-composer.command(
-  BotCommandList.IMAGE_DALLE,
-  usageCheckForImage,
-  async (ctx) => {
-    console.dir(ctx.update, { depth: Infinity });
-    try {
-      const prompt = ctx.message.text.split(" ").slice(1).join(" ");
+// composer.command(
+//   BotCommandList.IMAGE_DALLE,
+//   usageCheckForImage,
+//   async (ctx) => {
+//     console.dir(ctx.update, { depth: Infinity });
+//     try {
+//       const prompt = ctx.message.text.split(" ").slice(1).join(" ");
 
-      if (!prompt)
-        return await ctx.sendMessage(
-          "Please enter a descriptive prompt to generate image."
-        );
-      const msg = await ctx.sendMessage("Processing");
+//       if (!prompt)
+//         return await ctx.sendMessage(
+//           "Please enter a descriptive prompt to generate image."
+//         );
+//       const msg = await ctx.sendMessage("Processing");
 
-      // Send request to OpenAI to generate image
-      const url = await createImage(prompt, ctx.message.from.username);
+//       // Send request to OpenAI to generate image
+//       const url = await createImage(prompt, ctx.message.from.username);
 
-      if (url) {
-        ctx.session!.imagesCount++;
-        logger.debug(url);
-        await ctx.deleteMessage(msg.message_id);
-        return await ctx.sendPhoto({ url });
-      }
+//       if (url) {
+//         ctx.session!.imagesCount++;
+//         logger.debug(url);
+//         await ctx.deleteMessage(msg.message_id);
+//         return await ctx.sendPhoto({ url });
+//       }
 
-      await ctx.deleteMessage(msg.message_id);
-      return ctx.sendMessage("Something went wrong, please try again later");
-    } catch (error) {
-      throw error;
-    }
-  }
-);
+//       await ctx.deleteMessage(msg.message_id);
+//       return ctx.sendMessage("Something went wrong, please try again later");
+//     } catch (error) {
+//       throw error;
+//     }
+//   }
+// );
 
-composer.command(BotCommandList.IMAGE_MIDJ, usageCheckForImage, async (ctx) => {
+composer.command(BotCommandList.IMAGE, usageCheckForImage, async (ctx) => {
   console.dir(ctx.update, { depth: Infinity });
   try {
     const prompt = ctx.message.text.split(" ").slice(1).join(" ");

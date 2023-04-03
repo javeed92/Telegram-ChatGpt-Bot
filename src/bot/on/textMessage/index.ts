@@ -1,7 +1,7 @@
 import { Composer } from "telegraf";
 import { message } from "telegraf/filters";
 import { getChatByTelegramChatId } from "@/services/database/chat";
-import { addMessageToHistoryByChatId } from "@/services/database/messages_history";
+import { addMessageToHistoryByChatId, deleteMessagesFromHistoryByChatTopic } from "@/services/database/messages_history";
 import { createChatCompletion } from "@/openai-api/chat-completion";
 import { prepareChatcompletionMessages } from "@/utils/formatMessages";
 import { MyContext } from "@/types/bot/customContext";
@@ -15,10 +15,11 @@ const composer = new Composer<MyContext>();
 composer.on(message("text"), usageCheckForText, async (ctx) => {
   logger.info({ session: ctx.session });
   try {
+    await ctx.sendChatAction("typing");
     logger.info({ incomingMessageFromBotUser: ctx.message });
     // save user input as part of message history
     await addMessageToHistoryByChatId(
-      String(ctx.message.chat.id),
+      ctx.message.chat.id,
       ctx.session?.currentTopic,
       {
         text: ctx.message.text,
@@ -34,6 +35,7 @@ composer.on(message("text"), usageCheckForText, async (ctx) => {
 
     if (currentChat?.messages?.length) {
       const reply = await ctx.reply("Please wait..");
+      await ctx.sendChatAction("typing");
 
       const messages = prepareChatcompletionMessages(currentChat.messages);
       // generate response based on input messages using openai api chatcompletion endpoint
@@ -56,7 +58,7 @@ composer.on(message("text"), usageCheckForText, async (ctx) => {
 
       // save api response as part of message history
       await addMessageToHistoryByChatId(
-        String(ctx.message.chat.id),
+        ctx.message.chat.id,
         ctx.session?.currentTopic,
         {
           text: response,
@@ -66,6 +68,10 @@ composer.on(message("text"), usageCheckForText, async (ctx) => {
       );
     }
   } catch (error: any) {
+    if (error.response?.data?.error?.code === "context_length_exceeded") {
+      deleteMessagesFromHistoryByChatTopic(ctx.message.chat.id, ctx.session.currentTopic)
+      await ctx.sendMessage('Could not understand you, can you explain it with more context please ?')
+    }
     throw error;
   }
 });

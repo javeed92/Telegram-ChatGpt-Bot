@@ -8,47 +8,50 @@ import environment from "@/config/environment";
 cron.schedule("0 0 * * *", async () => {
   // Iterate over all the user sessions and reset the daily message counts for each user
   logger.info("**********CRON IS STARTED ( Messages reset )**********");
-  await updateSessions(
-    { },
-    { $set: { "session.messagesCount": 0 } }
-  );
+
+  await updateSessions({}, { $set: { "session.messagesCount": 0 } });
+
   bot.telegram.sendMessage(
     environment.ERROR_REPORT_CHAT_ID,
     "Cron - updating message limits"
   );
-  logger.info("**********CRON IS FINISHED**********");
+  
+  logger.info("**********CRON IS FINISHED ( Messages reset )**********");
 });
 
-// EVERY 6 HOURS
-cron.schedule("0 */6 * * *", async () => {
+// At minute 0 past every hour.
+cron.schedule("0 */1 * * *", async () => {
   // Get the current date
   logger.info("**********CRON IS STARTED ( Images reset )**********");
   const now = new Date();
 
   // Update sessions where the imagesResetDate has passed
-  await updateSessions(
+  const updateInfo = await updateSessions(
     {
-      "session.subscription": "Free",
       "session.imagesResetDate": { $lte: now },
     },
-    {
-      $set: { "sessionData.imagesCount": 0 },
-    }
+    [
+      {
+        $set: {
+          "session.imagesCount": 0,
+          "session.imagesResetDate": {
+            $dateAdd: {
+              startDate: "$session.imagesResetDate",
+              unit: "month",
+              amount: 1,
+            },
+          },
+        },
+      },
+    ]
   );
+
+  logger.info("**********CRON IS FINISHED ( Images reset )**********");
+
+  // Notify dev about updates
   bot.telegram.sendMessage(
     environment.ERROR_REPORT_CHAT_ID,
-    "Cron - updating image limits"
-  );
-  logger.info("**********CRON IS STARTED**********");
-});
-
-// for Render server
-cron.schedule("*/13 * * * *", async () => {
-  // Get the current date
-  logger.info("**********CRON IS STARTED ( To run server )**********");
-
-  bot.telegram.sendMessage(
-    environment.ERROR_REPORT_CHAT_ID,
-    "cron started to run server"
+    `Cron - updating image limits
+${JSON.stringify(updateInfo, null, 2)}`
   );
 });

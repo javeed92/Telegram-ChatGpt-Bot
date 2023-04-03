@@ -14,7 +14,7 @@ export const getMessagesHistoryByChatId = async (
 };
 
 export const addMessageToHistoryByChatId = async (
-  chat_id: string | undefined,
+  chat_id: number | undefined,
   chat_topic: string | undefined,
   payload: Partial<ICreateMessagesHistory> = {
     role: "user",
@@ -30,6 +30,22 @@ export const addMessageToHistoryByChatId = async (
     });
 
     return message;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteMessagesFromHistoryByChatTopic = async (
+  chat_id: number | undefined,
+  chat_topic: string | undefined,
+) => {
+  try {
+    const deletedInfo = await MessagesHistory.deleteMany({
+      chat_id,
+      chat_topic
+    });
+
+    return deletedInfo;
   } catch (error) {
     throw error;
   }

@@ -10,12 +10,16 @@ import { createTranscription } from "@/openai-api/whisper";
 import { createChatCompletion } from "@/openai-api/chat-completion";
 import { escapeCodeBlock, splitText } from "@/utils/escapeMarkdown2";
 import { usageCheckForVoice } from "@/bot/middlewares/usageCheck.middleware";
+import { voiceToImageTextPrompt } from "@/bot/helpers/texts/commandResponse.texts";
+import { Message } from "telegraf/typings/core/types/typegram";
+import { generateImage } from "@/replicate-api/openjourney-model";
 
 const composer = new Composer<MyContext>();
 
 composer.on(message("voice"), usageCheckForVoice, async (ctx) => {
   try {
-    let message = await ctx.sendMessage("Processing voice...");
+    let msg = await ctx.sendMessage("Processing voice...");
+
     const fileUrl = await ctx.telegram.getFileLink(ctx.message.voice.file_id);
 
     // Operation on the disk
@@ -26,28 +30,34 @@ composer.on(message("voice"), usageCheckForVoice, async (ctx) => {
 
     ctx.telegram.editMessageText(
       ctx.message.chat.id,
-      message.message_id,
+      msg.message_id,
       undefined,
-      "Creating transcript..."
+      "Converting to human understandable text... (transcript)"
     );
+
     const voiceText = await createTranscription(convertedFileStream);
 
     // Update voice counter session
-    ctx.session.voiceCount = ctx.session.voiceCount + 1
+    ctx.session.voiceCount = ctx.session.voiceCount + 1;
 
     if (!voiceText) {
+      await ctx.sendMessage(
+        "Could not understand what you aimed to say, can you repeat?"
+      );
       throw new Error("Something went wrong");
     }
 
-    const completionText = await createChatCompletion(
-      [{ role: "user", content: voiceText }],
-      ctx.message.from.username
-    );
-
-    ctx.deleteMessage(message.message_id);
-    if (completionText?.includes("```"))
-      await sendCodeMessages(ctx, completionText);
-    else await ctx.sendMessage(completionText || "");
+    // Check if voice intented to create image if yes, or just reponse from chat completion
+    if (
+      ctx.message.reply_to_message &&
+      "text" in ctx.message.reply_to_message &&
+      ctx.message.reply_to_message?.from?.is_bot &&
+      ctx.message.reply_to_message?.text! === voiceToImageTextPrompt
+    ) {
+      return await handleVoiceToImage(ctx, msg, voiceText);
+    } else {
+      return await handleVoiceToTextCompletion(ctx,msg,voiceText)
+    }
   } catch (error: any) {
     throw error;
   }
@@ -71,5 +81,53 @@ async function sendCodeMessages(ctx: MyContext, text: string) {
     }
   }
 }
+
+export const handleVoiceToImage = async (
+  ctx: MyContext,
+  msg: Message.TextMessage,
+  voiceText: string
+) => {
+  try {
+    const url = await generateImage(voiceText);
+    logger.debug(url);
+
+    if (!url) {
+      await ctx.sendMessage(
+        "Having some problem while generating image, please try again later"
+      );
+      throw new Error("Something went wrong");
+    }
+
+    ctx.session.imagesCount++;
+
+    await ctx.deleteMessage(msg.message_id);
+
+    return await ctx.sendPhoto({ url });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const handleVoiceToTextCompletion = async (
+  ctx: MyContext,
+  msg: Message.TextMessage,
+  voiceText: string
+) => {
+  try {
+    if (ctx.has("message")) {
+      const completionText = await createChatCompletion(
+        [{ role: "user", content: voiceText }],
+        ctx.message.from.username
+      );
+
+      ctx.deleteMessage(msg.message_id);
+      if (completionText?.includes("```"))
+        await sendCodeMessages(ctx, completionText);
+      else await ctx.sendMessage(completionText || "");
+    }
+  } catch (error) {
+    throw error;
+  }
+};
 
 export default composer;

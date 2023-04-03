@@ -1,4 +1,5 @@
 import ChatModel from "@/models/chat";
+import { Chat } from "telegraf/typings/core/types/typegram";
 
 export const getChatByTelegramChatId = async (
   id: number | undefined,
@@ -11,6 +12,7 @@ export const getChatByTelegramChatId = async (
           .populate({
             path: "messages",
             match: { chat_topic },
+            options: { limit: 5, lean: true, sort: { date: -1 } },
           })
           .lean()
       : await ChatModel.findOne({ id }).lean();
@@ -21,15 +23,15 @@ export const getChatByTelegramChatId = async (
   }
 };
 
-export const createTelegramChat = async (chatInput: any) => {
+export const createTelegramChat = async (chat: Chat) => {
   try {
-    const chat = await ChatModel.findOneAndReplace(
-      { id: chatInput.id },
-      chatInput,
+    const _chat = await ChatModel.findOneAndReplace(
+      { id: chat.id },
+      chat,
       { upsert: true }
     );
 
-    return chat;
+    return _chat;
   } catch (error) {
     throw error;
   }
