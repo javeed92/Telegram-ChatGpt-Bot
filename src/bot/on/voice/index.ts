@@ -13,6 +13,7 @@ import { usageCheckForVoice } from "@/bot/middlewares/usageCheck.middleware";
 import { voiceToImageTextPrompt } from "@/bot/helpers/texts/commandResponse.texts";
 import { Message } from "telegraf/typings/core/types/typegram";
 import { generateImage } from "@/replicate-api/openjourney-model";
+import { BotSubscription } from "@/helpers/enums/botSubscription.enums";
 
 const composer = new Composer<MyContext>();
 
@@ -20,6 +21,10 @@ composer.on(message("voice"), usageCheckForVoice, async (ctx) => {
   try {
     let msg = await ctx.sendMessage("Processing voice...");
 
+    if(ctx.session.subscription === BotSubscription.FREE && ctx.message.voice.duration > 5){
+      return await ctx.sendMessage('In Free subscription only voices with duration below 5 is allowed')
+    }
+    
     const fileUrl = await ctx.telegram.getFileLink(ctx.message.voice.file_id);
 
     // Operation on the disk
