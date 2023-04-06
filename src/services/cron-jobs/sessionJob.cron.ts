@@ -7,16 +7,16 @@ import environment from "@/config/environment";
 // EVERY DAY
 cron.schedule("0 0 * * *", async () => {
   // Iterate over all the user sessions and reset the daily message counts for each user
-  logger.info("**********CRON IS STARTED ( Messages reset )**********");
+  logger.info("**********CRON IS STARTED ( Messages and Voice reset )**********");
 
-  await updateSessions({}, { $set: { "session.messagesCount": 0 } });
+  await updateSessions({}, { $set: { "session.messagesCount": 0, "session.voiceCount": 0 } });
 
   bot.telegram.sendMessage(
     environment.ERROR_REPORT_CHAT_ID,
     "Cron - updating message limits"
   );
   
-  logger.info("**********CRON IS FINISHED ( Messages reset )**********");
+  logger.info("**********CRON IS FINISHED ( Messages and Voice reset )**********");
 });
 
 // At minute 0 past every hour.
@@ -55,3 +55,6 @@ cron.schedule("0 */1 * * *", async () => {
 ${JSON.stringify(updateInfo, null, 2)}`
   );
 });
+
+/** TODO */
+/** CRON JOB TO CANCEL Premium subs when period ends */
