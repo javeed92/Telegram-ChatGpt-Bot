@@ -1,7 +1,7 @@
 import { Composer } from "telegraf";
 import { message } from "telegraf/filters";
-import { getChatByTelegramChatId } from "@/services/database/chat";
-import { addMessageToHistoryByChatId, deleteMessagesFromHistoryByChatTopic } from "@/services/database/messages_history";
+import { getChatByTelegramChatId } from "@/services/database/chat.service";
+import { addMessageToHistoryByChatId, deleteMessagesFromHistoryByChatTopic } from "@/services/database/messages_history.service";
 import { createChatCompletion } from "@/openai-api/chat-completion";
 import { prepareChatcompletionMessages } from "@/utils/formatMessages";
 import { MyContext } from "@/types/bot/customContext";

@@ -1,17 +1,17 @@
-import { botConfig } from "@/config/environment";
 import { BotSubscription } from "@/helpers/enums/botSubscription.enums";
 import { SessionData } from "@/types/bot/customContext";
-import { getOneMonthLaterDate } from "./date.utils";
+import { getSpesifiedMonthLaterDate } from "./date.utils";
+import { botSubscriptionsLimitConfig } from "@/bot/config/defaults.config";
 
 export default () => {
   const defaultSessionData: SessionData = {
-    maxDailyMessages: botConfig.Free.DAILY_MESSAGES_LIMIT,
+    maxDailyMessages: botSubscriptionsLimitConfig.Free.DAILY_MESSAGES_LIMIT,
     messagesCount: 0,
-    maxDailyVoices: botConfig.Free.DAILY_VOICES_LIMIT,
+    maxDailyVoices: botSubscriptionsLimitConfig.Free.DAILY_VOICES_LIMIT,
     voiceCount: 0 ,
-    maxMonthlyImages: botConfig.Free.MONTHLY_IMAGES_LIMIT,
+    maxMonthlyImages: botSubscriptionsLimitConfig.Free.MONTHLY_IMAGES_LIMIT,
     imagesCount: 0,
-    imagesResetDate: getOneMonthLaterDate(),
+    imagesResetDate: getSpesifiedMonthLaterDate(),
     currentTopic: "default",
     topics: [],
     subscription: BotSubscription.FREE

@@ -1,5 +1,5 @@
 import { Telegraf, session } from "telegraf";
-import env from "../config/environment";
+import env from "../../config/environment";
 import { MyContext } from "@/types/bot/customContext";
 
 import { Mongo } from "@telegraf/session/mongodb";
@@ -12,7 +12,7 @@ import { RedisType } from "@grammyjs/ratelimiter/out/typesAndDefaults";
 
 export const rateMiddleware = limit<MyContext, RedisType>({
   timeFrame: 5000, // will be adjusted on production
-  limit: 2,
+  limit: 5,
   storageClient: "MEMORY_STORE",
   onLimitExceeded: (ctx) => {
     ctx.sendMessage("Please refrain from sending too many requests!");

@@ -1,5 +1,5 @@
 import cron from "node-cron";
-import { updateSessions } from "../database/session";
+import { updateSessions } from "../database/session.service";
 import logger from "@/config/logger";
 import bot from "@/bot";
 import environment from "@/config/environment";

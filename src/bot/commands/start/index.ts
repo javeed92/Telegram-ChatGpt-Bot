@@ -1,4 +1,4 @@
-import { createTelegramChat } from "@/services/database/chat";
+import { createTelegramChat } from "@/services/database/chat.service";
 import { MyContext } from "@/types/bot/customContext";
 import logger from "@/config/logger";
 import {

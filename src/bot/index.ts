@@ -1,4 +1,4 @@
-import bot, { customSession, rateMiddleware } from "./config";
+import bot, { customSession, rateMiddleware } from "./config/bot.config";
 import commandComposer from "./commands";
 import onComposer from "./on";
 import hearsComposer from "./hears";

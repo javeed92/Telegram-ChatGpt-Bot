@@ -13,6 +13,7 @@ export interface SessionData {
   maxDailyVoices: number;
   voiceCount: number ,
   subscription: BotSubscription;
+  premiumEndDate?: Date 
 }
 
 // Define your own context type
