@@ -12,39 +12,116 @@ import logger from "@/config/logger";
 import { ChatCompletionRequestMessageRoleEnum } from "openai";
 import { usageCheckForText } from "@/bot/middlewares/usageCheck.middleware";
 import { escapeCodeBlock, splitText } from "@/utils/escapeMarkdown2";
-import { donationResponseText } from "@/bot/helpers/texts/hearResponse.text";
+import {
+  createAdminFeedbackResponse,
+  createFeedbackMessage,
+  donationResponseText,
+  feedbackResponseText,
+} from "@/bot/helpers/texts/hearResponse.text";
 import { createDonationInvoice } from "@/bot/helpers/texts/invoice";
+import environment from "@/config/environment";
 
 const composer = new Composer<MyContext>();
 
-
 // Donation reply
-
-composer.on(message("text"), usageCheckForText, async (ctx, next) => {
-  logger.info({ session: ctx.session });
+composer.on(message("text"), async (ctx, next) => {
   try {
     if (
       ctx.message.reply_to_message &&
       "text" in ctx.message.reply_to_message &&
       ctx.message.reply_to_message.from?.is_bot &&
-      ctx.message.reply_to_message.text === donationResponseText
+      ctx.message.reply_to_message.text === donationResponseText.text
     ) {
-      await ctx.sendInvoice(
+      return await ctx.sendInvoice(
         createDonationInvoice(ctx.message.chat.id, parseInt(ctx.message.text))
       );
     }
 
-
+    return await next();
   } catch (error: any) {
     throw error;
   }
 });
 
+// Starting point of Feedback reply
+composer.on(message("text"), async (ctx, next) => {
+  try {
+    if (
+      ctx.message.reply_to_message &&
+      "text" in ctx.message.reply_to_message &&
+      ctx.message.reply_to_message.from?.is_bot &&
+      ctx.message.reply_to_message.text === feedbackResponseText.text
+    ) {
+      // Notify Help&Feedback group
+      return await ctx.telegram.sendMessage(
+        environment.HELP_GROUP_ID,
+        createFeedbackMessage(ctx.message),
+        { parse_mode: "MarkdownV2" }
+      );
+    }
+
+    return await next();
+  } catch (error: any) {
+    throw error;
+  }
+});
+
+// ADMIN Feedback reply
+composer.on(message("text"), async (ctx, next) => {
+  try {
+    if (
+      ctx.message.reply_to_message &&
+      "text" in ctx.message.reply_to_message &&
+      ctx.message.reply_to_message.from?.is_bot &&
+      ctx.message.reply_to_message.text.startsWith("Feedback from")
+    ) {
+      // Reply to user from support
+      const userChatId = ctx.message.reply_to_message.text.split("|")[1];
+      console.log({
+        userChatId,
+        messageText: ctx.message.reply_to_message.text.split("|"),
+      });
+      return await ctx.telegram.sendMessage(
+        userChatId,
+        createAdminFeedbackResponse(ctx.message),
+        { parse_mode: "MarkdownV2" }
+      );
+    }
+
+    return await next();
+  } catch (error: any) {
+    throw error;
+  }
+});
+
+// User Feedback reply
+// Don't need it
+// composer.on(message("text"), async (ctx, next) => {
+//   try {
+//     if (
+//       ctx.message.reply_to_message &&
+//       "text" in ctx.message.reply_to_message &&
+//       ctx.message.reply_to_message.from?.is_bot &&
+//       ctx.message.reply_to_message.text.startsWith("Response from support")
+//     ) {
+//       // Reply to admin from user
+
+//       return await ctx.telegram.sendMessage(
+//         environment.HELP_GROUP_ID,
+//         createFeedbackMessage(ctx.message),
+//         { parse_mode: "MarkdownV2" }
+//       );
+//     }
+
+//     return await next();
+//   } catch (error: any) {
+//     throw error;
+//   }
+// });
+
 composer.on(message("text"), usageCheckForText, async (ctx) => {
-  logger.info({ session: ctx.session });
   try {
     await ctx.sendChatAction("typing");
-    logger.info({ incomingMessageFromBotUser: ctx.message });
     // save user input as part of message history
     await addMessageToHistoryByChatId(
       ctx.message.chat.id,

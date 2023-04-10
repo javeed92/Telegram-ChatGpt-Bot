@@ -1,11 +1,12 @@
 import {
   PremiumSubscriptionPricesMonthly,
   botSubscriptionsLimitConfig,
+  channelLink,
 } from "@/bot/config/defaults.config";
 import { BotSubscription } from "@/helpers/enums/botSubscription.enums";
 import { SessionData } from "@/types/bot/customContext";
 import { ICharge } from "@/types/models";
-import { fmt, bold, italic } from "telegraf/format";
+import { fmt, bold, italic, link } from "telegraf/format";
 
 export const startResponse = (
   username: string
@@ -30,7 +31,7 @@ What ${bold`models`} do I use?
 7. ${bold`Voice`} to completion feature🔥🔥🔥
 
 
-Let's start the journey 🎉🎉🎉 for more visit @Channel
+Let's start the journey 🎉🎉🎉 for more visit ${link('@Channel',channelLink)}
 `;
 
 export const accountResponseText = (session: SessionData) => {

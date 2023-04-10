@@ -1,19 +1,13 @@
-import { createTelegramChat } from "@/services/database/chat.service";
 import { MyContext } from "@/types/bot/customContext";
-import logger from "@/config/logger";
 import {
   helpCommandResponse,
   startResponse,
 } from "@/bot/helpers/texts/commandResponse.texts";
-import { startupKeyboard } from "@/bot/helpers/markups/keyboard.markup";
+import { utilityKeyboard } from "@/bot/helpers/markups/keyboard.markup";
 
 export const startHandler = async (ctx: MyContext) => {
   try {
     if (ctx.has("message")) {
-      const chat = await createTelegramChat(ctx.message.chat);
-
-      logger.info({ chat, ses: ctx.session });
-
       await ctx.reply(
         startResponse(
           ctx.message?.from.username ||
@@ -21,7 +15,7 @@ export const startHandler = async (ctx: MyContext) => {
             ctx.message?.from.last_name ||
             "friend"
         ),
-        startupKeyboard()
+        utilityKeyboard()
       );
     }
   } catch (error) {

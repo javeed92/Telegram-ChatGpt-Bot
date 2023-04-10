@@ -1,4 +1,5 @@
 import ChatModel from "@/models/chat";
+import { IChatCreate } from "@/types/models";
 import { Chat } from "telegraf/typings/core/types/typegram";
 
 export const getChatByTelegramChatId = async (
@@ -23,12 +24,12 @@ export const getChatByTelegramChatId = async (
   }
 };
 
-export const createTelegramChat = async (chat: Chat) => {
+export const createTelegramChat = async (chat: IChatCreate) => {
   try {
     const _chat = await ChatModel.findOneAndReplace(
       { id: chat.id },
       chat,
-      { upsert: true }
+      { upsert: true, new: true }
     );
 
     return _chat;

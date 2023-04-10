@@ -23,12 +23,30 @@ export interface ICreateMessagesHistory
   extends Omit<IMessagesHistory, "chat_id | chat_topic"> {}
 
 /********************   Chat  **** *********** */
-export interface IChat extends Document {
+export interface IChatDocument extends Document {
   type: string;
   username: string;
   first_name: string;
   id: number;
+  status: string;
   messages: Array<IMessagesHistory>;
+}
+
+export interface IChat {
+  type: string;
+  username?: string;
+  first_name?: string;
+  id: number;
+  status: string;
+  messages?: Array<IMessagesHistory> | [];
+}
+
+export interface IChatCreate {
+  type: string;
+  username?: string;
+  first_name?: string;
+  id: number;
+  status?: string;
 }
 
 /************** Session ************** */

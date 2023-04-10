@@ -39,3 +39,5 @@ export const paymentProviderConfig = {
   activeProviderCurrency: PaymentProviderCurrency.YOOKASSA,
   activeProviderToken: environment.PAYMENT_YOOKASSA_TOKEN,
 };
+
+export const channelLink = 'https://t.me/inniBotChannel'
