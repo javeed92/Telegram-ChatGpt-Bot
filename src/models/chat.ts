@@ -1,4 +1,4 @@
-import { IChat } from "@/types/models";
+import { IChatDocument } from "@/types/models";
 import mongoose from "mongoose";
 
 const chatSchema = new mongoose.Schema(
@@ -7,6 +7,7 @@ const chatSchema = new mongoose.Schema(
     first_name: String,
     username: String,
     type: String,
+    status: String
   },
   { toJSON: { virtuals: true } }
 );
@@ -18,4 +19,4 @@ chatSchema.virtual("messages", {
   justOne: false,
 });
 
-export default mongoose.model<IChat>("chat", chatSchema);
+export default mongoose.model<IChatDocument>("chat", chatSchema);

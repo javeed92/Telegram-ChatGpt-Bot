@@ -1,6 +1,7 @@
 import { ISessionData } from "@/types/models";
 import Session from "@/models/session";
 import { FilterQuery, UpdateQuery, UpdateWithAggregationPipeline } from "mongoose";
+import { after } from "node:test";
 
 export const getAllSession = async (query: any) => {
   try {
@@ -18,7 +19,6 @@ export const updateSessions = async (
 ) => {
   try {
     const sessions = await Session.updateMany(queryFilter, updates);
-    console.log(sessions)
     return sessions;
   } catch (error) {
     throw error;

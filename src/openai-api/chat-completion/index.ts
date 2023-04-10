@@ -1,49 +1,52 @@
 import { ChatCompletionRequestMessage } from "openai";
 import openaiAPI from "../config";
 import logger from "@/config/logger";
+import { BotSubscription } from "@/helpers/enums/botSubscription.enums";
+import { ChatCompletionResponse } from "@/types/openai-api";
 
 export const createCompletion = async (
   prompt: string
 ): Promise<string | undefined> => {
   // Generate a response from the OpenAI ChatGPT model
   try {
-    console.log("Processing...");
+    logger.debug("Processing...");
     const response = await openaiAPI.createCompletion({
       prompt,
       max_tokens: 50,
       model: "text-davinci-003",
       n: 1,
-      stop: "\n",
     });
-    console.log("Completed...");
-    console.dir(response.data);
 
     return response.data.choices[0].text;
   } catch (error: any) {
-    // console.log(error.response.data);
-    throw error
+    throw error;
   }
 };
 
 export const createChatCompletion = async (
   messages: ChatCompletionRequestMessage[],
-  user: string | undefined
-): Promise<string | undefined> => {
+  user: string | undefined,
+  subscription?: BotSubscription
+): Promise<ChatCompletionResponse> => {
   // Generate a response from the OpenAI ChatGPT model
   try {
     logger.debug("createChatCompletion --- Processing...");
+    const max_tokens = subscription === BotSubscription.FREE ? 256 : undefined;
     const response = await openaiAPI.createChatCompletion({
       user,
       messages,
       model: "gpt-3.5-turbo",
+      max_tokens,
       n: 1,
     });
     logger.debug("createChatCompletion --- Completed...");
-    console.dir(response.data, {depth: Infinity});
+    logger.debug(response.data);
 
-    return response.data.choices[0].message?.content;
-  } catch (error) {
-    // console.log(error);
-    throw error
+    return {
+      text: response.data.choices[0].message?.content ?? null,
+      usage: response.data.usage ?? null,
+    };
+  } catch (error: any) {
+    throw error;
   }
 };

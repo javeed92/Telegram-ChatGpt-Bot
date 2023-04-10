@@ -1,54 +1,107 @@
 import cron from "node-cron";
-import { updateSessions } from "../database/session";
+import { updateSessions } from "../database/session.service";
 import logger from "@/config/logger";
 import bot from "@/bot";
 import environment from "@/config/environment";
+import { botSubscriptionsLimitConfig } from "@/bot/config/defaults.config";
+import { BotSubscription } from "@/helpers/enums/botSubscription.enums";
 
 // EVERY DAY
 cron.schedule("0 0 * * *", async () => {
   // Iterate over all the user sessions and reset the daily message counts for each user
-  logger.info("**********CRON IS STARTED ( Messages reset )**********");
-  await updateSessions(
-    { },
-    { $set: { "session.messagesCount": 0 } }
+  logger.info(
+    "**********CRON IS STARTED ( Messages and Voice reset )**********"
   );
+
+  await updateSessions(
+    {},
+    { $set: { "session.messagesCount": 0, "session.voiceCount": 0 } }
+  );
+
   bot.telegram.sendMessage(
     environment.ERROR_REPORT_CHAT_ID,
     "Cron - updating message limits"
   );
-  logger.info("**********CRON IS FINISHED**********");
+
+  logger.info(
+    "**********CRON IS FINISHED ( Messages and Voice reset )**********"
+  );
 });
 
-// EVERY 6 HOURS
-cron.schedule("0 */6 * * *", async () => {
+// At minute 0 past every hour.
+cron.schedule("0 */1 * * *", async () => {
   // Get the current date
   logger.info("**********CRON IS STARTED ( Images reset )**********");
   const now = new Date();
 
   // Update sessions where the imagesResetDate has passed
-  await updateSessions(
+  const updateInfo = await updateSessions(
     {
-      "session.subscription": "Free",
       "session.imagesResetDate": { $lte: now },
     },
-    {
-      $set: { "sessionData.imagesCount": 0 },
-    }
+    [
+      {
+        $set: {
+          "session.imagesCount": 0,
+          "session.imagesResetDate": {
+            $dateAdd: {
+              startDate: "$session.imagesResetDate",
+              unit: "month",
+              amount: 1,
+            },
+          },
+        },
+      },
+    ]
   );
+
+  logger.info("**********CRON IS FINISHED ( Images reset )**********");
+
+  // Notify dev about updates
   bot.telegram.sendMessage(
     environment.ERROR_REPORT_CHAT_ID,
-    "Cron - updating image limits"
+    `Cron - updating image limits
+${JSON.stringify(updateInfo, null, 2)}`
   );
-  logger.info("**********CRON IS STARTED**********");
 });
 
-// for Render server
-cron.schedule("*/13 * * * *", async () => {
+/** TODO */
+/** CRON JOB TO CANCEL Premium subs when period ends */
+// At minute 0 past every hour.
+cron.schedule("0 */1 * * *", async () => {
   // Get the current date
-  logger.info("**********CRON IS STARTED ( To run server )**********");
+  logger.info("**********CRON IS STARTED ( Premium Reset )**********");
+  const now = new Date();
 
+  // Update sessions where the premiumEndDate has passed
+  const updateInfo = await updateSessions(
+    {
+      "session.premiumEndDate": { $lte: now },
+    },
+    [
+      {
+        $set: {
+          "session.maxDailyMessages":
+            botSubscriptionsLimitConfig.Free.DAILY_MESSAGES_LIMIT,
+          "session.maxDailyVoices":
+            botSubscriptionsLimitConfig.Free.DAILY_VOICES_LIMIT,
+          "session.maxMonthlyImages":
+            botSubscriptionsLimitConfig.Free.MONTHLY_IMAGES_LIMIT,
+          subscription: BotSubscription.FREE,
+          "session.imagesCount": 0,
+          "session.messagesCount": 0,
+          "session.voiceCount": 0,
+        },
+      },
+    ]
+  );
+
+  logger.info("**********CRON IS FINISHED ( Premium Reset )**********");
+
+  // Notify dev about updates
   bot.telegram.sendMessage(
     environment.ERROR_REPORT_CHAT_ID,
-    "cron started to run server"
+    `Cron - canceling premium subs
+${JSON.stringify(updateInfo, null, 2)}`
   );
 });

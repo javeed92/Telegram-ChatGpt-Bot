@@ -14,8 +14,6 @@ export const generateImage = async (prompt: string) => {
         guidance_scale: 7.5
       },
     }) as Array<string>;
-    
-    console.log({openJourneyGeneratedImage})
 
     return openJourneyGeneratedImage[0]
   } catch (error) {
