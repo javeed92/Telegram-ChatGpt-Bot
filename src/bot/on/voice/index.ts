@@ -21,10 +21,15 @@ composer.on(message("voice"), usageCheckForVoice, async (ctx) => {
   try {
     let msg = await ctx.sendMessage("Processing voice...");
 
-    if(ctx.session.subscription === BotSubscription.FREE && ctx.message.voice.duration > 5){
-      return await ctx.sendMessage('In Free subscription only voices with duration below 5 is allowed')
+    if (
+      ctx.session.subscription === BotSubscription.FREE &&
+      ctx.message.voice.duration > 5
+    ) {
+      return await ctx.sendMessage(
+        "In Free subscription only voices with duration below 5 is allowed"
+      );
     }
-    
+
     const fileUrl = await ctx.telegram.getFileLink(ctx.message.voice.file_id);
 
     // Operation on the disk
@@ -61,7 +66,7 @@ composer.on(message("voice"), usageCheckForVoice, async (ctx) => {
     ) {
       return await handleVoiceToImage(ctx, msg, voiceText);
     } else {
-      return await handleVoiceToTextCompletion(ctx,msg,voiceText)
+      return await handleVoiceToTextCompletion(ctx, msg, voiceText);
     }
   } catch (error: any) {
     throw error;
@@ -119,15 +124,17 @@ export const handleVoiceToTextCompletion = async (
 ) => {
   try {
     if (ctx.has("message")) {
-      const completionText = await createChatCompletion(
+      const { text: completionText, usage } = await createChatCompletion(
         [{ role: "user", content: voiceText }],
-        ctx.message.from.username
+        ctx.message.from.username,
+        ctx.session.subscription
       );
 
       ctx.deleteMessage(msg.message_id);
+      
       if (completionText?.includes("```"))
         await sendCodeMessages(ctx, completionText);
-      else await ctx.sendMessage(completionText || "");
+      else await ctx.sendMessage(completionText || "Sorry could not understood you.");
     }
   } catch (error) {
     throw error;

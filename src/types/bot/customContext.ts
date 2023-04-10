@@ -11,9 +11,10 @@ export interface SessionData {
   imagesResetDate: Date;
   imagesCount: number;
   maxDailyVoices: number;
-  voiceCount: number ,
+  voiceCount: number;
   subscription: BotSubscription;
-  premiumEndDate?: Date 
+  premiumEndDate?: Date;
+  totalTokenUsage: number  
 }
 
 // Define your own context type

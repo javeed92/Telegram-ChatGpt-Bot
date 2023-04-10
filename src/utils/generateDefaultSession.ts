@@ -14,7 +14,8 @@ export default () => {
     imagesResetDate: getSpesifiedMonthLaterDate(),
     currentTopic: "default",
     topics: [],
-    subscription: BotSubscription.FREE
+    subscription: BotSubscription.FREE,
+    totalTokenUsage: 0
   };
   return defaultSessionData;
 };

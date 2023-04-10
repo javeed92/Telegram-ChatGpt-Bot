@@ -9,20 +9,12 @@ import {
   premiumMonthlyImagesLimitResponse,
   premiumDailyMessageLimitResponse,
 } from "../helpers/texts/limitReachedResponses.texts";
-import environment from "@/config/environment";
 
 export async function usageCheckForImage(
   ctx: MyContext,
   next: () => Promise<void>
 ) {
-  logger.debug("Usage Check Middleware");
-  const chat_ids = environment.WHITE_LIST_CHAT_ID.split(",");
-
-  for (const chat_id of chat_ids) {
-    if (parseInt(chat_id) == ctx.message?.chat.id) 
-    return await next()
-  }
-
+  logger.debug("Usage Check Middleware - usageCheckForImage");
   try {
     // Free limits check
     if (ctx.session?.subscription === BotSubscription.FREE) {
@@ -49,7 +41,7 @@ export async function usageCheckForVoice(
   ctx: MyContext,
   next: () => Promise<void>
 ) {
-  logger.debug("Usage Check Middleware");
+  logger.debug("Usage Check Middleware - usageCheckForVoice");
   try {
     // Free limits check
     if (ctx.session.subscription === BotSubscription.FREE) {
@@ -76,7 +68,7 @@ export async function usageCheckForText(
   ctx: MyContext,
   next: () => Promise<void>
 ) {
-  logger.debug("Usage Check Middleware");
+  logger.debug("Usage Check Middleware - usageCheckForText");
   try {
     // Free limits check
     if (ctx.session.subscription === BotSubscription.FREE) {

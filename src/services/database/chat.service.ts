@@ -1,6 +1,7 @@
+import logger from "@/config/logger";
 import ChatModel from "@/models/chat";
-import { IChatCreate } from "@/types/models";
-import { Chat } from "telegraf/typings/core/types/typegram";
+import { IChat, IChatCreate, IChatDocument } from "@/types/models";
+import { FilterQuery } from "mongoose";
 
 export const getChatByTelegramChatId = async (
   id: number | undefined,
@@ -26,13 +27,26 @@ export const getChatByTelegramChatId = async (
 
 export const createTelegramChat = async (chat: IChatCreate) => {
   try {
-    const _chat = await ChatModel.findOneAndReplace(
-      { id: chat.id },
-      chat,
-      { upsert: true, new: true }
-    );
+    const _chat = await ChatModel.findOneAndReplace({ id: chat.id }, chat, {
+      upsert: true,
+      new: true,
+    });
 
     return _chat;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateTelegramChat = async (
+  id: number,
+  updates: FilterQuery<IChatDocument>
+) => {
+  try {
+    const _chatUpdateInfo = await ChatModel.updateOne({ id: id }, updates);
+    logger.debug(`*****_chatUpdateInfo**** ${id}`);
+    logger.debug({ _chatUpdateInfo });
+    return _chatUpdateInfo;
   } catch (error) {
     throw error;
   }

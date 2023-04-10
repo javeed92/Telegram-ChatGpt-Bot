@@ -1,6 +1,8 @@
 import { Composer } from "telegraf";
 import { message } from "telegraf/filters";
-import { getChatByTelegramChatId } from "@/services/database/chat.service";
+import {
+  getChatByTelegramChatId,
+} from "@/services/database/chat.service";
 import {
   addMessageToHistoryByChatId,
   deleteMessagesFromHistoryByChatTopic,
@@ -144,16 +146,19 @@ composer.on(message("text"), usageCheckForText, async (ctx) => {
 
       const messages = prepareChatcompletionMessages(currentChat.messages);
       // generate response based on input messages using openai api chatcompletion endpoint
-      const response = await createChatCompletion(
+      const { text: response, usage } = await createChatCompletion(
         messages,
-        String(currentChat?._id)
+        String(currentChat?._id),
+        ctx.session.subscription
       );
 
       if (!response)
         return await ctx.reply("Could not answer! Please provide more context");
 
-      // Update message counter of session
-      ctx.session ? ctx.session.messagesCount++ : "";
+      // Update message counter of session and token usage
+      ctx.session.messagesCount = ctx.session.messagesCount + 1;
+      ctx.session.totalTokenUsage =
+        ctx.session.totalTokenUsage + (usage?.total_tokens ?? 0);
 
       // Response to the end user
       await ctx.deleteMessage(reply.message_id);
