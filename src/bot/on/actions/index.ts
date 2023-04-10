@@ -1,9 +1,8 @@
 import { Composer } from "telegraf";
-import { callbackQuery, message } from "telegraf/filters";
+import { callbackQuery } from "telegraf/filters";
 import { MyContext } from "@/types/bot/customContext";
 import { PremiumSubscriptionPricesMonthly } from "@/bot/config/defaults.config";
 import { createInvoice } from "@/bot/helpers/texts/invoice";
-import { InvoiceReplyOptions } from "@/bot/helpers/markups/invoiceOptions";
 
 const composer = new Composer<MyContext>();
 
@@ -32,8 +31,6 @@ composer.action(/t-delete\s.*/, async (ctx, next) => {
 composer.action(/premium\s.*/, async (ctx) => {
   try {
     if (ctx.has(callbackQuery("data"))) {
-      console.dir(ctx.update, { depth: Infinity });
-
       const forMonth = ctx.callbackQuery.data.split(" ")[1];
 
       await ctx.answerCbQuery(
@@ -41,8 +38,7 @@ composer.action(/premium\s.*/, async (ctx) => {
           PremiumSubscriptionPricesMonthly[
             forMonth as keyof typeof PremiumSubscriptionPricesMonthly
           ]
-        } for ${forMonth} month!`,
-        { show_alert: true }
+        } for ${forMonth} month!`
       );
 
       await ctx.sendInvoice(createInvoice(forMonth));

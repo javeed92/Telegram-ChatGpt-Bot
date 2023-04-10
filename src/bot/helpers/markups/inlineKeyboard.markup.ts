@@ -19,3 +19,8 @@ export const premiumCommandMarkup = () => {
 
   return Markup.inlineKeyboard(inlineKeyboardArr);
 };
+
+
+export const forceReplyOptions = () => {
+  return Markup.forceReply()
+}

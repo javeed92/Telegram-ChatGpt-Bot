@@ -2,6 +2,7 @@ import axios from "axios";
 import ffmpeg from "fluent-ffmpeg";
 import internal, { PassThrough, Readable } from "stream";
 import { downloadVoiceMessage } from "./downloadTelegramAudioFile";
+import logger from "@/config/logger";
 
 export async function convertAudioFileByLocalFile(
   fileUrl: string
@@ -12,15 +13,12 @@ export async function convertAudioFileByLocalFile(
     const convertedFilePath = `${filePath.slice(0, -3)}mp3`;
     ffmpeg(filePath)
       .toFormat("mp3")
-      .on("data", (chunk) => {
-        console.log({ chunk });
-      })
       .on("end", () => {
-        console.log("Audio file converted successfully");
+        logger.debug("Audio file converted successfully");
         resolve(convertedFilePath);
       })
       .on("error", (err) => {
-        console.error("Error converting audio file:", err);
+        logger.error("Error converting audio file:", err);
         reject(err);
       })
       .save(convertedFilePath);
@@ -37,11 +35,11 @@ export async function convertAudioFileWithStream(audioUrl: string): Promise<inte
         .format("oga")
         .audioCodec("libmp3lame")
         .on("end", () => {
-          console.log("Audio file converted successfully");
+          logger.debug("Audio file converted successfully");
           // resolve(Buffer.concat(convertedBuffer));
         })
         .on("error", (err) => {
-          console.error("Error converting audio file:", err);
+          logger.error("Error converting audio file:", err);
           reject(err);
         })
         .outputFormat("mp3")
@@ -51,7 +49,7 @@ export async function convertAudioFileWithStream(audioUrl: string): Promise<inte
         convertedBuffer.push(buf);
       });
       bufferStream.on("end", function () {
-        console.log("Audio file buffered successfully");
+        logger.debug("Audio file buffered successfully");
         const audiostream = Readable.from(Buffer.concat(convertedBuffer));
         // @ts-expect-error
         audiostream.path = "audio.mp3";
@@ -59,7 +57,6 @@ export async function convertAudioFileWithStream(audioUrl: string): Promise<inte
       });
     });
   } catch (err) {
-    console.error("Error retrieving audio file:", err);
     throw err;
   }
 }

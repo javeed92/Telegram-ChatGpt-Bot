@@ -11,6 +11,8 @@ const chargeSchema = new mongoose.Schema({
     provider_payment_charge_id: String,
     date: Date,
     isProlong: Boolean,
+    isDonation: Boolean,
+    currency: String,
     period_ends: Date
 });
 

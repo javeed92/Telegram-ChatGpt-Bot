@@ -7,7 +7,7 @@ export const createCompletion = async (
 ): Promise<string | undefined> => {
   // Generate a response from the OpenAI ChatGPT model
   try {
-    console.log("Processing...");
+    logger.debug("Processing...");
     const response = await openaiAPI.createCompletion({
       prompt,
       max_tokens: 50,
@@ -15,12 +15,9 @@ export const createCompletion = async (
       n: 1,
       stop: "\n",
     });
-    console.log("Completed...");
-    console.dir(response.data);
 
     return response.data.choices[0].text;
   } catch (error: any) {
-    // console.log(error.response.data);
     throw error
   }
 };
@@ -40,11 +37,8 @@ export const createChatCompletion = async (
       n: 1,
     });
     logger.debug("createChatCompletion --- Completed...");
-    console.dir(response.data, {depth: Infinity});
-
     return response.data.choices[0].message?.content;
   } catch (error: any) {
-    console.log(error.response.data);
     throw error
   }
 };

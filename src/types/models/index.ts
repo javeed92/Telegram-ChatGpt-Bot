@@ -54,5 +54,7 @@ export interface ICharge {
   provider_payment_charge_id: string,
   date: Date,
   isProlong: Boolean,
+  isDonation: Boolean,
+  currency: string
   period_ends: Date
 }

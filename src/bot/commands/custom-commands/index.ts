@@ -12,18 +12,14 @@ import {
   accountResponseText,
   premiumCommandResponseText,
 } from "@/bot/helpers/texts/commandResponse.texts";
-import { createImage } from "@/openai-api/images";
 import { generateImage } from "@/replicate-api/openjourney-model";
 import { MyContext } from "@/types/bot/customContext";
 import { Composer } from "telegraf";
 import { usageCheckForImage } from "@/bot/middlewares/usageCheck.middleware";
-import { createInvoice } from "@/bot/helpers/texts/invoice";
-import { InvoiceReplyOptions } from "@/bot/helpers/markups/invoiceOptions";
 import { premiumCommandMarkup } from "@/bot/helpers/markups/inlineKeyboard.markup";
 import { BotSubscription } from "@/helpers/enums/botSubscription.enums";
 import { getCharge } from "@/services/database/charge.service";
 import { ChargeStatus } from "@/helpers/enums/chargeStatus.enums";
-import { ICharge } from "@/types/models";
 
 const composer = new Composer<MyContext>();
 
@@ -70,7 +66,7 @@ composer.command(BotCommandList.DONATIONS, async (ctx) => {
 //   BotCommandList.IMAGE_DALLE,
 //   usageCheckForImage,
 //   async (ctx) => {
-//     console.dir(ctx.update, { depth: Infinity });
+//     dir(ctx.update, { depth: Infinity });
 //     try {
 //       const prompt = ctx.message.text.split(" ").slice(1).join(" ");
 
@@ -99,7 +95,6 @@ composer.command(BotCommandList.DONATIONS, async (ctx) => {
 // );
 
 composer.command(BotCommandList.IMAGE, usageCheckForImage, async (ctx) => {
-  console.dir(ctx.update, { depth: Infinity });
   try {
     const prompt = ctx.message.text.split(" ").slice(1).join(" ");
 
@@ -135,7 +130,7 @@ composer.command(BotCommandList.PREMIUM, async (ctx) => {
         chat_id: ctx.message.from.id,
         status: ChargeStatus.ACTIVE,
       });
-      console.log({activeCharge})
+
       return await ctx.sendMessage(
         premiumCommandResponseText(activeCharge),
         premiumCommandMarkup()

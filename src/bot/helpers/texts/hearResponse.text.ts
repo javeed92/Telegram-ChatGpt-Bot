@@ -1,0 +1,1 @@
+export const donationResponseText = 'Please respond to this text how much amount you want to donate :). You donations will help us to improve our services and user experience'

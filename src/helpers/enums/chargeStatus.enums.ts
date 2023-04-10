@@ -1,5 +1,6 @@
 export enum ChargeStatus {
     PENDING = 1,
     ACTIVE = 2,
-    CANCELED = 3
+    CANCELED = 3,
+    PAID = 4
 }

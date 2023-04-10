@@ -1,7 +1,10 @@
 import { Composer } from "telegraf";
 import { message } from "telegraf/filters";
 import { getChatByTelegramChatId } from "@/services/database/chat.service";
-import { addMessageToHistoryByChatId, deleteMessagesFromHistoryByChatTopic } from "@/services/database/messages_history.service";
+import {
+  addMessageToHistoryByChatId,
+  deleteMessagesFromHistoryByChatTopic,
+} from "@/services/database/messages_history.service";
 import { createChatCompletion } from "@/openai-api/chat-completion";
 import { prepareChatcompletionMessages } from "@/utils/formatMessages";
 import { MyContext } from "@/types/bot/customContext";
@@ -9,8 +12,33 @@ import logger from "@/config/logger";
 import { ChatCompletionRequestMessageRoleEnum } from "openai";
 import { usageCheckForText } from "@/bot/middlewares/usageCheck.middleware";
 import { escapeCodeBlock, splitText } from "@/utils/escapeMarkdown2";
+import { donationResponseText } from "@/bot/helpers/texts/hearResponse.text";
+import { createDonationInvoice } from "@/bot/helpers/texts/invoice";
 
 const composer = new Composer<MyContext>();
+
+
+// Donation reply
+
+composer.on(message("text"), usageCheckForText, async (ctx, next) => {
+  logger.info({ session: ctx.session });
+  try {
+    if (
+      ctx.message.reply_to_message &&
+      "text" in ctx.message.reply_to_message &&
+      ctx.message.reply_to_message.from?.is_bot &&
+      ctx.message.reply_to_message.text === donationResponseText
+    ) {
+      await ctx.sendInvoice(
+        createDonationInvoice(ctx.message.chat.id, parseInt(ctx.message.text))
+      );
+    }
+
+
+  } catch (error: any) {
+    throw error;
+  }
+});
 
 composer.on(message("text"), usageCheckForText, async (ctx) => {
   logger.info({ session: ctx.session });
@@ -69,8 +97,13 @@ composer.on(message("text"), usageCheckForText, async (ctx) => {
     }
   } catch (error: any) {
     if (error.response?.data?.error?.code === "context_length_exceeded") {
-      deleteMessagesFromHistoryByChatTopic(ctx.message.chat.id, ctx.session.currentTopic)
-      await ctx.sendMessage('Could not understand you, can you explain it with more context please ?')
+      deleteMessagesFromHistoryByChatTopic(
+        ctx.message.chat.id,
+        ctx.session.currentTopic
+      );
+      await ctx.sendMessage(
+        "Could not understand you, can you explain it with more context please ?"
+      );
     }
     throw error;
   }
@@ -80,7 +113,6 @@ composer.on(message("text"), usageCheckForText, async (ctx) => {
 
 async function sendCodeMessages(ctx: MyContext, text: string) {
   const { codeBlocks, parts } = splitText(text || "");
-  console.log({ codeBlocks, parts });
 
   for (let txt of parts) {
     if (!txt) continue;

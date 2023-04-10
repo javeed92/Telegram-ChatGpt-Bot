@@ -56,8 +56,8 @@ composer.on(message("voice"), usageCheckForVoice, async (ctx) => {
     if (
       ctx.message.reply_to_message &&
       "text" in ctx.message.reply_to_message &&
-      ctx.message.reply_to_message?.from?.is_bot &&
-      ctx.message.reply_to_message?.text! === voiceToImageTextPrompt
+      ctx.message.reply_to_message.from?.is_bot &&
+      ctx.message.reply_to_message.text === voiceToImageTextPrompt
     ) {
       return await handleVoiceToImage(ctx, msg, voiceText);
     } else {
@@ -72,7 +72,6 @@ composer.on(message("voice"), usageCheckForVoice, async (ctx) => {
 
 async function sendCodeMessages(ctx: MyContext, text: string) {
   const { codeBlocks, parts } = splitText(text || "");
-  console.log({ codeBlocks, parts });
 
   for (let txt of parts) {
     if (!txt) continue;

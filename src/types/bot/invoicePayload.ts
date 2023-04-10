@@ -1,7 +1,11 @@
+import { PaymentProviderCurrency } from "@/bot/config/defaults.config";
 import { ICharge } from "../models";
 
 export interface InvoicePayload{
-    month: number,
+    month?: number,
     charge_id: string,
-    activeCharge: ICharge
+    activeCharge?: ICharge,
+    isDonation?: Boolean,
+    subscriptionType: string,
+    currency: PaymentProviderCurrency
 }

@@ -19,7 +19,6 @@ export const updateSessions = async (
 ) => {
   try {
     const sessions = await Session.updateMany(queryFilter, updates);
-    console.log(sessions)
     return sessions;
   } catch (error) {
     throw error;

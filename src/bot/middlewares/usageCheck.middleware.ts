@@ -19,14 +19,13 @@ export async function usageCheckForImage(
 ) {
   logger.debug("Usage Check Middleware");
   const chat_ids = environment.WHITE_LIST_CHAT_ID.split(",");
+
   for (const chat_id of chat_ids) {
     if (parseInt(chat_id) == ctx.message?.chat.id) 
     return await next()
   }
-  try {
-    console.dir(ctx.update, { depth: 3 });
-    console.dir(ctx.session, { depth: 3 });
 
+  try {
     // Free limits check
     if (ctx.session?.subscription === BotSubscription.FREE) {
       if (ctx.session?.imagesCount! >= ctx.session?.maxMonthlyImages!) {
@@ -54,9 +53,6 @@ export async function usageCheckForVoice(
 ) {
   logger.debug("Usage Check Middleware");
   try {
-    console.dir(ctx.update, { depth: 3 });
-    console.dir(ctx.session, { depth: 3 });
-
     // Free limits check
     if (ctx.session?.subscription === BotSubscription.FREE) {
       if (ctx.session?.messagesCount! >= ctx.session?.maxDailyMessages!) {
@@ -84,9 +80,6 @@ export async function usageCheckForText(
 ) {
   logger.debug("Usage Check Middleware");
   try {
-    console.dir(ctx.update, { depth: 3 });
-    console.dir(ctx.session, { depth: 3 });
-
     // Free limits check
     if (ctx.session?.subscription === BotSubscription.FREE) {
       logger.debug("FREE TEXT LIMIT CONDITION CHECK");
