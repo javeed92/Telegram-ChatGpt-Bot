@@ -11,9 +11,13 @@ export async function whiteListMiddleware(
       const whileListChatIds = environment.WHITE_LIST_CHAT_IDs.split(",").map(
         (id) => parseInt(id)
       );
+
+      if(ctx.chat === undefined) return 
+
       for (const id of whileListChatIds) {
         if (ctx.chat?.id === id) return await next();
       }
+      
       return await ctx.sendMessage(accessDeniedResponseText)
     }
 
