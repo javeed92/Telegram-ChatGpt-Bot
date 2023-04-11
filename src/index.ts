@@ -14,7 +14,7 @@ const startTheApp = async () => {
   await connectToDbServer();
 
   app.listen(env.PORT, async () => {
-    logger.debug(`Listening on port ${env.PORT} - cyclec test push`);
+    logger.debug(`Listening on port ${env.PORT}`);
     const webhookInfo = await bot.telegram.getWebhookInfo();
     logger.debug({ webhookInfo });
   });
