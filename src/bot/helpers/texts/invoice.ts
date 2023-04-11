@@ -3,11 +3,11 @@ import {
   botSubscriptionsLimitConfig,
   paymentProviderConfig,
 } from "@/bot/config/defaults.config";
-import environment from "@/config/environment";
 import { generateOTP } from "@/utils/generateChargeIdentifier";
 import { NewInvoiceParameters } from "telegraf/typings/telegram-types";
 
 export const createInvoice = (month: string) => {
+  console.log({token: paymentProviderConfig.activeProviderToken,currency: paymentProviderConfig.activeProviderCurrency})
   const invoice: NewInvoiceParameters = {
     provider_token: paymentProviderConfig.activeProviderToken,
     start_parameter: `premium-${month}-month`,
