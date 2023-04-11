@@ -1,5 +1,5 @@
 const {
-  PORTE,
+  PORT,
   OPEN_AI_API_KEY,
   TELEGRAM_TOKEN,
   WEBHOOK_DOMAIN,
@@ -11,7 +11,7 @@ const {
   PAYMENT_SMART_TOKEN,
   HELP_GROUP_ID
 } = process.env as {
-  PORTE: string;
+  PORT: string;
   OPEN_AI_API_KEY: string;
   TELEGRAM_TOKEN: string;
   WEBHOOK_DOMAIN: string;
@@ -25,7 +25,7 @@ const {
 };
 
 export default {
-  PORTE,
+  PORT,
   OPEN_AI_API_KEY,
   TELEGRAM_TOKEN,
   WEBHOOK_DOMAIN,
