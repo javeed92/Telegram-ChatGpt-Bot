@@ -50,9 +50,6 @@ composer.on("pre_checkout_query", async (ctx) => {
 });
 
 composer.on(message("successful_payment"), async (ctx, next) => {
-  // Logging successful payments
-  logger.info(ctx.message.successful_payment)
-
   try {
     const payload: InvoicePayload = JSON.parse(
       ctx.message.successful_payment.invoice_payload

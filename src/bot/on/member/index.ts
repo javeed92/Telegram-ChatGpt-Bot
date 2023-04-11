@@ -8,7 +8,6 @@ import { memberStatusUpdateNotif } from "@/bot/helpers/texts/memberNotifucation.
 const composer = new Composer<MyContext>();
 
 composer.on("my_chat_member", async (ctx) => {
-  logger.info(ctx.myChatMember);
   try {
     const chat = await createTelegramChat({
       ...ctx.myChatMember.chat,
