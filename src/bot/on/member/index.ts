@@ -10,31 +10,16 @@ const composer = new Composer<MyContext>();
 composer.on("my_chat_member", async (ctx) => {
   logger.info(ctx.myChatMember);
   try {
-    if (ctx.myChatMember.new_chat_member.status === "member") {
-      const chat = await createTelegramChat({
-        ...ctx.myChatMember.chat,
-        status: "member",
-      });
+    const chat = await createTelegramChat({
+      ...ctx.myChatMember.chat,
+      status: ctx.myChatMember.new_chat_member.status,
+    });
 
-      if (chat)
-        return await ctx.telegram.sendMessage(
-          environment.ERROR_REPORT_CHAT_ID,
-          memberStatusUpdateNotif(chat)
-        );
-    }
-
-    if (ctx.myChatMember.new_chat_member.status === "kicked") {
-      const chat = await createTelegramChat({
-        ...ctx.myChatMember.chat,
-        status: "kicked",
-      });
-
-      if (chat)
+    if (chat)
       return await ctx.telegram.sendMessage(
-        environment.ERROR_REPORT_CHAT_ID,
+        environment.HELP_GROUP_ID,
         memberStatusUpdateNotif(chat)
       );
-    }
   } catch (error) {
     throw error;
   }
