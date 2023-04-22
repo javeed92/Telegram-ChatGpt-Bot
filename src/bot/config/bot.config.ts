@@ -31,7 +31,8 @@ const defaultSession = generateDefaultSession;
 export const customSession = session({store, defaultSession})
 
 const bot = new Telegraf<MyContext>(env.TELEGRAM_TOKEN, {
-  telegram: { webhookReply: false },
+  telegram: { webhookReply: true},
+  // handlerTimeout: 10000
 });
 
 bot.telegram.setMyCommands(generateCommandsArray(), {

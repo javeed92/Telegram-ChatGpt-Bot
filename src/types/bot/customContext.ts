@@ -27,4 +27,6 @@ export interface NarrowedCtxObject {
   update_id: number;
 }
 
+export type NarrowedCtxObjectMessage =  Update.New & Update.NonChannel & Message.TextMessage & Record<'text',{}>
+
 export interface INarrowedMyContext extends NarrowedContext<MyContext, NarrowedCtxObject> {}

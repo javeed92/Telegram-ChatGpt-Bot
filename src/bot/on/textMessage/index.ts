@@ -1,8 +1,6 @@
 import { Composer } from "telegraf";
 import { message } from "telegraf/filters";
-import {
-  getChatByTelegramChatId,
-} from "@/services/database/chat.service";
+import { getChatByTelegramChatId } from "@/services/database/chat.service";
 import {
   addMessageToHistoryByChatId,
   deleteMessagesFromHistoryByChatTopic,
@@ -22,6 +20,7 @@ import {
 } from "@/bot/helpers/texts/hearResponse.text";
 import { createDonationInvoice } from "@/bot/helpers/texts/invoice";
 import environment from "@/config/environment";
+import { createMessageJob } from "@/jobs";
 
 const composer = new Composer<MyContext>();
 
@@ -121,92 +120,84 @@ composer.on(message("text"), async (ctx, next) => {
 //   }
 // });
 
+// composer.on(message("text"), usageCheckForText, async (ctx) => {
+//   try {
+//     await ctx.sendChatAction("typing");
+//     // save user input as part of message history
+//     await addMessageToHistoryByChatId(
+//       ctx.message.chat.id,
+//       ctx.session?.currentTopic,
+//       {
+//         text: ctx.message.text,
+//         date: new Date(ctx.message?.date * 1000),
+//       }
+//     );
+//     // get messages for creating chatcompletion
+//     const currentChat = await getChatByTelegramChatId(
+//       ctx.message.chat.id,
+//       ctx.session?.currentTopic,
+//       true
+//     );
+
+//     if (currentChat?.messages?.length) {
+//       const reply = await ctx.reply("Please wait..");
+//       await ctx.sendChatAction("typing");
+
+//       const messages = prepareChatcompletionMessages(currentChat.messages);
+//       // generate response based on input messages using openai api chatcompletion endpoint
+//       const { text: response, usage } = await createChatCompletion(
+//         messages,
+//         String(currentChat?._id),
+//         ctx.session.subscription
+//       );
+
+//       if (!response)
+//         return await ctx.reply("Could not answer! Please provide more context");
+
+//       // Update message counter of session and token usage
+//       ctx.session.messagesCount = ctx.session.messagesCount + 1;
+//       ctx.session.totalTokenUsage =
+//         ctx.session.totalTokenUsage + (usage?.total_tokens ?? 0);
+
+//       // Response to the end user
+//       await ctx.deleteMessage(reply.message_id);
+
+//       if (response.includes("```")) await sendCodeMessages(ctx, response);
+//       else await ctx.sendMessage(response);
+
+//       // save api response as part of message history
+//       await addMessageToHistoryByChatId(
+//         ctx.message.chat.id,
+//         ctx.session?.currentTopic,
+//         {
+//           text: response,
+//           date: new Date(),
+//           role: ChatCompletionRequestMessageRoleEnum.Assistant,
+//         }
+//       );
+//     }
+//   } catch (error: any) {
+//     if (error.response?.data?.error?.code === "context_length_exceeded") {
+//       deleteMessagesFromHistoryByChatTopic(
+//         ctx.message.chat.id,
+//         ctx.session.currentTopic
+//       );
+//       await ctx.sendMessage(
+//         "Could not understand you, can you explain it with more context please ?"
+//       );
+//     }
+//     throw error;
+//   }
+// });
+
 composer.on(message("text"), usageCheckForText, async (ctx) => {
   try {
-    await ctx.sendChatAction("typing");
-    // save user input as part of message history
-    await addMessageToHistoryByChatId(
-      ctx.message.chat.id,
-      ctx.session?.currentTopic,
-      {
-        text: ctx.message.text,
-        date: new Date(ctx.message?.date * 1000),
-      }
-    );
-    // get messages for creating chatcompletion
-    const currentChat = await getChatByTelegramChatId(
-      ctx.message.chat.id,
-      ctx.session?.currentTopic,
-      true
-    );
+    const msg = await ctx.reply("Please wait...");
 
-    if (currentChat?.messages?.length) {
-      const reply = await ctx.reply("Please wait..");
-      await ctx.sendChatAction("typing");
-
-      const messages = prepareChatcompletionMessages(currentChat.messages);
-      // generate response based on input messages using openai api chatcompletion endpoint
-      const { text: response, usage } = await createChatCompletion(
-        messages,
-        String(currentChat?._id),
-        ctx.session.subscription
-      );
-
-      if (!response)
-        return await ctx.reply("Could not answer! Please provide more context");
-
-      // Update message counter of session and token usage
-      ctx.session.messagesCount = ctx.session.messagesCount + 1;
-      ctx.session.totalTokenUsage =
-        ctx.session.totalTokenUsage + (usage?.total_tokens ?? 0);
-
-      // Response to the end user
-      await ctx.deleteMessage(reply.message_id);
-
-      if (response.includes("```")) await sendCodeMessages(ctx, response);
-      else await ctx.sendMessage(response);
-
-      // save api response as part of message history
-      await addMessageToHistoryByChatId(
-        ctx.message.chat.id,
-        ctx.session?.currentTopic,
-        {
-          text: response,
-          date: new Date(),
-          role: ChatCompletionRequestMessageRoleEnum.Assistant,
-        }
-      );
-    }
+    await createMessageJob({ message: ctx.message, msgToEdit: msg, session: ctx.session });
   } catch (error: any) {
-    if (error.response?.data?.error?.code === "context_length_exceeded") {
-      deleteMessagesFromHistoryByChatTopic(
-        ctx.message.chat.id,
-        ctx.session.currentTopic
-      );
-      await ctx.sendMessage(
-        "Could not understand you, can you explain it with more context please ?"
-      );
-    }
     throw error;
   }
 });
-
-// Util functions
-
-async function sendCodeMessages(ctx: MyContext, text: string) {
-  const { codeBlocks, parts } = splitText(text || "");
-
-  for (let txt of parts) {
-    if (!txt) continue;
-    let cTxt: string | undefined;
-    if ((cTxt = codeBlocks?.find((cb) => cb.includes(txt)))) {
-      logger.debug("MARKDOWN MESSAGE");
-      txt = escapeCodeBlock(cTxt);
-      await ctx.replyWithMarkdownV2(txt);
-    } else {
-      await ctx.sendMessage(txt);
-    }
-  }
-}
 
 export default composer;
