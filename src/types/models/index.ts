@@ -55,6 +55,11 @@ export interface ISessionData extends Document {
   session: SessionData;
 }
 
+export interface ISessionDataRaw{
+  key: string;
+  session: SessionData;
+}
+
 export interface ISessionDataUpdate{
   key?: string;
   session?: Partial<SessionData>;
