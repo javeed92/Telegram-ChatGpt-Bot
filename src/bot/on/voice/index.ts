@@ -14,7 +14,7 @@ import { voiceToImageTextPrompt } from "@/bot/helpers/texts/commandResponse.text
 import { Message } from "telegraf/typings/core/types/typegram";
 import { generateImage } from "@/replicate-api/openjourney-model";
 import { BotSubscription } from "@/helpers/enums/botSubscription.enums";
-import { listeningFrogStickerFileId, typingSharkStickerFileId } from "@/bot/helpers/stickers";
+import { listeningFrogStickerFileId, robotChargeStickerFileId } from "@/bot/helpers/stickers";
 
 const composer = new Composer<MyContext>();
 
@@ -43,7 +43,7 @@ composer.on(message("voice"), usageCheckForVoice, async (ctx) => {
       msg.message_id
     );
 
-    msg = await ctx.sendSticker(typingSharkStickerFileId)
+    msg = await ctx.sendSticker(robotChargeStickerFileId)
 
     const voiceText = await createTranscription(convertedFileStream);
 
