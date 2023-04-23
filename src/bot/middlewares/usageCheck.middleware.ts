@@ -9,6 +9,7 @@ import {
   premiumMonthlyImagesLimitResponse,
   premiumDailyMessageLimitResponse,
 } from "../helpers/texts/limitReachedResponses.texts";
+import { robotChargeStickerFileId } from "../helpers/stickers";
 
 export async function usageCheckForImage(
   ctx: MyContext,
@@ -75,6 +76,7 @@ export async function usageCheckForText(
       logger.debug("FREE TEXT LIMIT CONDITION CHECK");
       if (ctx.session.messagesCount >= ctx.session.maxDailyMessages) {
         logger.debug("FREE TEXT LIMIT MEET");
+        await ctx.sendSticker(robotChargeStickerFileId)
         return await ctx.reply(freeDailyMessageLimitResponse);
       }
     }
@@ -84,6 +86,7 @@ export async function usageCheckForText(
       logger.debug("PREMIUM TEXT LIMIT CONDITION CHECK");
       if (ctx.session.messagesCount >= ctx.session.maxDailyMessages) {
         logger.debug("PREMIUM TEXT LIMIT MEET");
+        await ctx.sendSticker(robotChargeStickerFileId)
         return await ctx.reply(premiumDailyMessageLimitResponse);
       }
     }

@@ -1,3 +1,6 @@
-export const typingSharkStickerFileId = 'CAACAgIAAxkBAAIGV2REX-xveYMIGSWep5SNOS__yVghAAJDAANEDc8XIqysVRZ-nWEvBA'
 export const listeningFrogStickerFileId = 'CAACAgQAAxkBAAIGaGREZpciDXGlHTnLVtLa6YGm_fEkAAI7AQACqCEhBjzp5AEkcbJtLwQ'
 export const paintingMoleStickerFileId = 'CAACAgIAAxkBAAIGdmREarqqImcaqn2u2wNsvGdYMnmXAAJJAAOvxlEaNY16lBe67DQvBA'
+
+export const robotThinksStickerFileId = 'CAACAgIAAxkBAAEgKblkRaa1hscOz4D2aNifu059YRloOwACXwAD29t-AAGEsFSbEa7K4y8E'
+export const robotLikeStickerFileId = 'CAACAgIAAxkBAAEgKbVkRaaO4ecnDfdMvdWw7dEIIwNZIgACPwAD29t-AAH05pw4AeSqaS8E'
+export const robotChargeStickerFileId = 'CAACAgIAAxkBAAEgKbdkRaaV_d49NEvO9nJSwWow6hZ5AwACOAAD29t-AAHZk3yYN2zlLC8E'

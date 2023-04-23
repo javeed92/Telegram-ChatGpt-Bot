@@ -111,7 +111,7 @@ ${JSON.stringify(updateInfo, null, 2)}`
 });
 
 /** CRON JOB TO Notify Premium subs about period ending  */
-// EVERY DAY
+// EVERY DAY at 00:10 UTC 
 cron.schedule("10 0 * * *", async () => {
   // Get the current date
   logger.info("**********CRON IS STARTED ( Premium Notify )**********");
