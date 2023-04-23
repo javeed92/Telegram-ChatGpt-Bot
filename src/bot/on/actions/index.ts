@@ -3,6 +3,7 @@ import { callbackQuery } from "telegraf/filters";
 import { MyContext } from "@/types/bot/customContext";
 import { PremiumSubscriptionPricesMonthly } from "@/bot/config/defaults.config";
 import { createInvoice } from "@/bot/helpers/texts/invoice";
+import { robotLikeStickerFileId } from "@/bot/helpers/stickers";
 
 const composer = new Composer<MyContext>();
 
@@ -24,6 +25,7 @@ composer.action(/t-delete\s.*/, async (ctx, next) => {
         ? "default_topic"
         : ctx.session.currentTopic;
     ctx.session.topics = ctx.session.topics.filter((topic) => topic !== data);
+    await ctx.sendSticker(robotLikeStickerFileId)
     return await ctx.sendMessage(`Topic: ${data}, deleted`);
   }
 });
