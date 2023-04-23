@@ -9,7 +9,7 @@ import logger from "@/config/logger";
 const app = express();
 
 const startTheApp = async () => {
-  app.use(await bot.createWebhook({ domain: env.WEBHOOK_DOMAIN }));
+  app.use(await bot.createWebhook({ domain: env.WEBHOOK_DOMAIN, drop_pending_updates: true }));
 
   await connectToDbServer();
 

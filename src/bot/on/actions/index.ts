@@ -12,6 +12,7 @@ composer.action(/t-checkout\s.*/, async (ctx, next) => {
     await ctx.answerCbQuery();
     const data = ctx.callbackQuery.data.split(" ")[1];
     ctx.session!.currentTopic = data;
+    await ctx.sendSticker(robotLikeStickerFileId)
     return await ctx.sendMessage(`Checked out: ${data}`);
   }
 });
