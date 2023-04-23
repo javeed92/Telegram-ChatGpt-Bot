@@ -31,7 +31,7 @@ export const createChatCompletion = async (
   // Generate a response from the OpenAI ChatGPT model
   try {
     logger.debug("createChatCompletion --- Processing...");
-    const max_tokens = subscription === BotSubscription.FREE ? 256 : undefined;
+    const max_tokens = subscription === BotSubscription.FREE ? 700 : undefined;
     const response = await openaiAPI.createChatCompletion({
       user,
       messages,
