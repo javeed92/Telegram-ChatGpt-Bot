@@ -20,6 +20,7 @@ import { premiumCommandMarkup } from "@/bot/helpers/markups/inlineKeyboard.marku
 import { BotSubscription } from "@/helpers/enums/botSubscription.enums";
 import { getCharge } from "@/services/database/charge.service";
 import { ChargeStatus } from "@/helpers/enums/chargeStatus.enums";
+import { paintingMoleStickerFileId } from "@/bot/helpers/stickers";
 
 const composer = new Composer<MyContext>();
 
@@ -102,7 +103,7 @@ composer.command(BotCommandList.IMAGE, usageCheckForImage, async (ctx) => {
       return await ctx.sendMessage(
         "Please enter a descriptive prompt to generate image."
       );
-    const msg = await ctx.sendMessage("Processing");
+    const msg = await ctx.sendSticker(paintingMoleStickerFileId);
 
     // Send request to Replicate to generate image
     const url = await generateImage(prompt);

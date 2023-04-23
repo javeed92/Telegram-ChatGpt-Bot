@@ -1,11 +1,10 @@
 import { ISessionData } from "@/types/models";
 import Session from "@/models/session";
 import { FilterQuery, UpdateQuery, UpdateWithAggregationPipeline } from "mongoose";
-import { after } from "node:test";
 
-export const getAllSession = async (query: any) => {
+export const getAllSessions = async (query: FilterQuery<ISessionData> = {}) => {
   try {
-    const session = await Session.find();
+    const session = await Session.find(query);
 
     return session;
   } catch (error) {
@@ -24,3 +23,4 @@ export const updateSessions = async (
     throw error;
   }
 };
+

@@ -22,6 +22,7 @@ import {
 } from "@/bot/helpers/texts/hearResponse.text";
 import { createDonationInvoice } from "@/bot/helpers/texts/invoice";
 import environment from "@/config/environment";
+import { typingSharkStickerFileId } from "@/bot/helpers/stickers";
 
 const composer = new Composer<MyContext>();
 
@@ -141,7 +142,7 @@ composer.on(message("text"), usageCheckForText, async (ctx) => {
     );
 
     if (currentChat?.messages?.length) {
-      const reply = await ctx.reply("Please wait..");
+      const reply = await ctx.sendSticker(typingSharkStickerFileId);
       await ctx.sendChatAction("typing");
 
       const messages = prepareChatcompletionMessages(currentChat.messages);

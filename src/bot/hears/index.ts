@@ -1,15 +1,13 @@
 import { Composer } from "telegraf";
 import { MyContext } from "@/types/bot/customContext";
-import { premiumCommandResponseText, voiceToImageTextPrompt } from "../helpers/texts/commandResponse.texts";
+import { premiumKeyboardResponseText, voiceToImageTextPrompt } from "../helpers/texts/commandResponse.texts";
 import { BotSubscription } from "@/helpers/enums/botSubscription.enums";
 import {
   donationResponseText,
   feedbackResponseText,
 } from "../helpers/texts/hearResponse.text";
-import { forceReplyOptions, premiumCommandMarkup } from "../helpers/markups/inlineKeyboard.markup";
+import { forceReplyOptions } from "../helpers/markups/inlineKeyboard.markup";
 import { utilityKeyboard } from "../helpers/markups/keyboard.markup";
-import { getCharge } from "@/services/database/charge.service";
-import { ChargeStatus } from "@/helpers/enums/chargeStatus.enums";
 
 const composer = new Composer<MyContext>();
 
@@ -35,21 +33,8 @@ composer.hears("💵 Donation", async (ctx) => {
 });
 composer.hears("✅ Premium Subscription", async (ctx) => {
   try {
-    if (ctx.session.subscription === BotSubscription.PREMIUM) {
-      const activeCharge = await getCharge({
-        chat_id: ctx.message.from.id,
-        status: ChargeStatus.ACTIVE,
-      });
-
-      return await ctx.sendMessage(
-        premiumCommandResponseText(activeCharge),
-        premiumCommandMarkup()
-      );
-    }
-
     return await ctx.sendMessage(
-      premiumCommandResponseText(),
-      premiumCommandMarkup()
+      premiumKeyboardResponseText()
     );
   } catch (error) {
     throw error
