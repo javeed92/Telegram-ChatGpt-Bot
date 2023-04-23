@@ -14,25 +14,49 @@ export const startResponse = (
 
 What ${bold`models`} do I use? 
 
-1. gpt-3.5-turbo.
-2. whisper
-3. text-davinci
-4. and others ...
+1.gpt-3.5-turbo.
+2.whisper
+3.text-davinci
+4.and others ...
 
 
 👀What can I do such as:
 
-1. Copywriting and rewriting
-2. Writing and editing code
-3. Translation from any language
-4. Parsing unstructured text and summarization
-5. Chat Completions (with topics that remember the context, see /help)
-6. ${bold`Image`} generation using fine-tuned model on Midjourney🦾
-7. ${bold`Voice`} to completion feature🔥🔥🔥
-8. ${bold`Voice`} to image feature🔥🔥🔥
+1.Copywriting and rewriting
+2.Writing and editing code
+3.Translation from any language
+4.Parsing unstructured text and summarization
+5.Chat Completions (with topics that remember the context, see /help)
+6.${bold`Image`} generation using fine-tuned model on Midjourney🦾
+7.${bold`Voice`} to completion feature🔥🔥🔥
+8.${bold`Voice`} to image feature🔥🔥🔥
 
 
 Let's start the journey 🎉🎉🎉 for more visit ${link("@Channel", channelLink)}
+
+🇷🇺
+Привет ${username}! Используя этого бота, вы сможете взаимодействовать с продуктами OpenAI и многое другое.
+
+Какие ${bold`модели`} я могу использовать?
+
+1.gpt-3.5-turbo.
+2.whisper
+3.text-davinci
+4.и другие ...
+
+👀Что я могу сделать:
+
+1.Копирование и переписывание текста
+2.Написание и редактирование кода
+3.Перевод с любого языка
+4.Обработка неструктурированного текста и создание резюме
+5.Завершение чата (с темами, которые запоминают контекст, см. /help)
+6.${bold`Генерация изображений`} с использованием модели, обученной на Midjourney🦾
+7.${bold`Голосовое`} завершение фраз🔥🔥🔥
+8.${bold`Голосовое`} завершение изображений🔥🔥🔥
+
+
+Давайте начнем путешествие 🎉🎉🎉, для получения дополнительной информации посетите ${link("@Channel", channelLink)}
 `;
 
 export const accountResponseText = (session: SessionData) => {
@@ -139,4 +163,37 @@ ${
 }
 
 Please select how many months do you want to subscribe:
+`;
+
+export const premiumKeyboardResponseText = (
+) => fmt`
+🇬🇧
+The bot allows you to send up to ${bold`15 requests`} to Open AI daily for free to generate texts and create 5 images per month. This limit ensures the speed and quality of your work.
+
+Need more? Connect premium subscription for a month for ${bold`199 rubles`}. 
+
+Premium subscription includes:
+✅ up to ${bold`200`} text queries daily;
+✅ up to ${bold`100`} picture requests per month;
+✅ no pause between requests;
+✅ up to ${bold`5`} voice messages per day;
+✅ maintaining a high operating speed, even during high load periods.
+
+⚡️✨ Extra feature Voice to Image also included in ${bold`/premium`} subscription
+
+Tap /premium to try it.
+
+🇷🇺
+Бот позволяет ежедневно бесплатно отправлять до ${bold`15 запросов`} к Open AI для генерации текстов и создавать 5 изображений в месяц. Такой лимит обеспечивает скорость и качество работы.
+
+Нужно больше? Подключите премиум-подписку на месяц за ${bold`199 руб`}. 
+
+Премиум-подписка включает:
+✅ до ${bold`200`} текстовых запросов ежедневно;
+✅ до ${bold`100`} запросов на создание картинок в месяц;
+✅ нет паузы между запросами;
+✅ до ${bold`5`} голосовых сообщений в день;
+✅ поддержание высокой скор
+
+нажмите /premium
 `;

@@ -2,31 +2,27 @@ import environment from "@/config/environment";
 import { BotSubscription } from "@/helpers/enums/botSubscription.enums";
 
 export const PremiumSubscriptionPricesMonthly = {
-  "1": "400rubl",
-  "2": "750rubl",
-  "3": "1050rubl",
-  "6": "1400rubl",
-  "12": "3000rubl",
+  "1": "199 rubl",
+  "6": "390 rubl 💥hit",
+  "12": "790 rubl",
 };
 
 export const PremiumSubscriptionPricesForInvoiceMonthly = {
-  "1": 40000,
-  "2": 75000,
-  "3": 105000,
-  "6": 140000,
-  "12": 300000,
+  "1": 19900,
+  "6": 39000,
+  "12": 79000,
 };
 
 export const botSubscriptionsLimitConfig = {
   [BotSubscription.FREE]: {
-    DAILY_MESSAGES_LIMIT: 10,
+    DAILY_MESSAGES_LIMIT: 15,
     DAILY_VOICES_LIMIT: 3,
     MONTHLY_IMAGES_LIMIT: 5,
   },
   [BotSubscription.PREMIUM]: {
-    DAILY_MESSAGES_LIMIT: 100,
-    DAILY_VOICES_LIMIT: 30,
-    MONTHLY_IMAGES_LIMIT: 40,
+    DAILY_MESSAGES_LIMIT: 200,
+    DAILY_VOICES_LIMIT: 5,
+    MONTHLY_IMAGES_LIMIT: 100,
   },
 };
 

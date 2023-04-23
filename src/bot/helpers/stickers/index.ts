@@ -1,0 +1,3 @@
+export const typingSharkStickerFileId = 'CAACAgIAAxkBAAIGV2REX-xveYMIGSWep5SNOS__yVghAAJDAANEDc8XIqysVRZ-nWEvBA'
+export const listeningFrogStickerFileId = 'CAACAgQAAxkBAAIGaGREZpciDXGlHTnLVtLa6YGm_fEkAAI7AQACqCEhBjzp5AEkcbJtLwQ'
+export const paintingMoleStickerFileId = 'CAACAgIAAxkBAAIGdmREarqqImcaqn2u2wNsvGdYMnmXAAJJAAOvxlEaNY16lBe67DQvBA'

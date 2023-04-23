@@ -14,12 +14,13 @@ import { voiceToImageTextPrompt } from "@/bot/helpers/texts/commandResponse.text
 import { Message } from "telegraf/typings/core/types/typegram";
 import { generateImage } from "@/replicate-api/openjourney-model";
 import { BotSubscription } from "@/helpers/enums/botSubscription.enums";
+import { listeningFrogStickerFileId, typingSharkStickerFileId } from "@/bot/helpers/stickers";
 
 const composer = new Composer<MyContext>();
 
 composer.on(message("voice"), usageCheckForVoice, async (ctx) => {
   try {
-    let msg = await ctx.sendMessage("Processing voice...");
+    let msg = await ctx.sendSticker(listeningFrogStickerFileId);
 
     if (
       ctx.session.subscription === BotSubscription.FREE &&
@@ -38,12 +39,11 @@ composer.on(message("voice"), usageCheckForVoice, async (ctx) => {
     // Operation with streams
     const convertedFileStream = await convertAudioFileWithStream(fileUrl.href);
 
-    ctx.telegram.editMessageText(
-      ctx.message.chat.id,
-      msg.message_id,
-      undefined,
-      "Converting to human understandable text... (transcript)"
+    await ctx.deleteMessage(
+      msg.message_id
     );
+
+    msg = await ctx.sendSticker(typingSharkStickerFileId)
 
     const voiceText = await createTranscription(convertedFileStream);
 
@@ -93,7 +93,7 @@ async function sendCodeMessages(ctx: MyContext, text: string) {
 
 export const handleVoiceToImage = async (
   ctx: MyContext,
-  msg: Message.TextMessage,
+  msg: Message.StickerMessage,
   voiceText: string
 ) => {
   try {
@@ -119,7 +119,7 @@ export const handleVoiceToImage = async (
 
 export const handleVoiceToTextCompletion = async (
   ctx: MyContext,
-  msg: Message.TextMessage,
+  msg: Message.StickerMessage,
   voiceText: string
 ) => {
   try {
