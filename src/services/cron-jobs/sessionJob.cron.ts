@@ -91,10 +91,14 @@ cron.schedule("0 0 * * *", async () => {
             botSubscriptionsLimitConfig.Free.DAILY_VOICES_LIMIT,
           "session.maxMonthlyImages":
             botSubscriptionsLimitConfig.Free.MONTHLY_IMAGES_LIMIT,
-          subscription: BotSubscription.FREE,
+          "session.subscription": BotSubscription.FREE,
           "session.imagesCount": 0,
           "session.messagesCount": 0,
           "session.voiceCount": 0,
+          "session.premiumEndDate": null, // add this to unset the field
+        },
+        $unset: {
+          "session.premiumEndDate": "", // add this to remove the field
         },
       },
     ]
@@ -111,7 +115,7 @@ ${JSON.stringify(updateInfo, null, 2)}`
 });
 
 /** CRON JOB TO Notify Premium subs about period ending  */
-// EVERY DAY at 00:10 UTC 
+// EVERY DAY at 00:10 UTC
 cron.schedule("10 0 * * *", async () => {
   // Get the current date
   logger.info("**********CRON IS STARTED ( Premium Notify )**********");
@@ -125,11 +129,13 @@ cron.schedule("10 0 * * *", async () => {
     },
   });
 
-
-  await sendBatches(sessions, `Your premium subscription is about to expire in 1 day. 
+  await sendBatches(
+    sessions,
+    `Your premium subscription is about to expire in 1 day. 
 If you want to access the premium feature prolong your subscription :)
 
-/premium`);
+/premium`
+  );
 
   logger.info("**********CRON IS FINISHED ( Premium Notify )**********");
 
