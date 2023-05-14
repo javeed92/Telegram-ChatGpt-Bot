@@ -17,6 +17,9 @@ export const startHandler = async (ctx: MyContext) => {
         ),
         utilityKeyboard()
       );
+      const chat = await createTelegramChat({
+        ...ctx.message.chat,
+      });
     }
   } catch (error) {
     throw error;
