@@ -4,6 +4,7 @@ import {
   startResponse,
 } from "@/bot/helpers/texts/commandResponse.texts";
 import { utilityKeyboard } from "@/bot/helpers/markups/keyboard.markup";
+import { createTelegramChat } from "@/services/database/chat.service";
 
 export const startHandler = async (ctx: MyContext) => {
   try {
